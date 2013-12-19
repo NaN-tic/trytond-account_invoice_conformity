@@ -1,0 +1,86 @@
+# 
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:account.invoice,conformed_description:"
+msgid "Conformed Description"
+msgstr "Descripció de la conformitat"
+
+msgctxt "field:account.invoice,conformity_result:"
+msgid "Conformity Result"
+msgstr "Resultat de la conformitat"
+
+msgctxt "field:account.invoice,conformity_state:"
+msgid "Conformity State"
+msgstr "Estat de la conformitat"
+
+msgctxt "field:account.invoice,disconformity_culprit:"
+msgid "Disconformity Culprit"
+msgstr "Culpable de la disconformitat"
+
+msgctxt "field:account.invoice,to_conform_by:"
+msgid "Conform By"
+msgstr "Conformada Per"
+
+msgctxt "model:ir.action,name:act_invoice_conform_invoice_form"
+msgid "Invoices to Conform"
+msgstr "Factures a conformar"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_invoice_conform_invoice_domain_conformed"
+msgid "Conformed"
+msgstr "Conformada"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_invoice_conform_invoice_domain_disconformed"
+msgid "Disonformed"
+msgstr "No Conforme"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_invoice_conform_invoice_domain_toconform"
+msgid "To Conform"
+msgstr "Per conformar"
+
+msgctxt "model:ir.ui.menu,name:menu_invoice_conform_invoice_form"
+msgid "Invoices to Conform"
+msgstr "Factures a conformar"
+
+msgctxt "selection:account.invoice,conformity_result:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:account.invoice,conformity_result:"
+msgid "Conformed"
+msgstr "Conformada"
+
+msgctxt "selection:account.invoice,conformity_result:"
+msgid "Disconformed"
+msgstr "No Conforme"
+
+msgctxt "selection:account.invoice,conformity_result:"
+msgid "To Conform"
+msgstr "Per conformar"
+
+msgctxt "selection:account.invoice,conformity_state:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:account.invoice,conformity_state:"
+msgid "Closed"
+msgstr "Tancat"
+
+msgctxt "selection:account.invoice,conformity_state:"
+msgid "Pending"
+msgstr "Pendent"
+
+msgctxt "selection:account.invoice,disconformity_culprit:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:account.invoice,disconformity_culprit:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "selection:account.invoice,disconformity_culprit:"
+msgid "Supplier"
+msgstr "Proveïdor"
