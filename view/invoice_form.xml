@@ -6,14 +6,14 @@ this repository contains the full copyright notices and license terms. -->
         <page string="Conform" id="conform">
             <label name="to_conform_by"/>
             <field name="to_conform_by"/>
+            <label name="conformity_state"/>
+            <field name="conformity_state"/>
+            <label name="conformity_result"/>
+            <field name="conformity_result"/>
             <label name="disconformity_culprit"/>
             <field name="disconformity_culprit"/>
             <separator name="conformed_description" colspan="4"/>
             <field name="conformed_description" colspan="4"/>
-            <label name="conformity_result"/>
-            <field name="conformity_result"/>
-            <label name="conformity_state"/>
-            <field name="conformity_state"/>
         </page>
     </xpath>
 </data>
