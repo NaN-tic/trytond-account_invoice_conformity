@@ -19,7 +19,7 @@
         <record model="ir.action.act_window" id="act_invoice_conform_invoice_form">
             <field name="name">Invoices to Conform</field>
             <field name="res_model">account.invoice</field>
-            <field name="domain">[('type', '=', 'in_invoice'), ('conformity_result', '!=', None)]</field>
+            <field name="domain">[('type', '=', 'in_invoice'), ('conformity_state', '!=', None)]</field>
             <field name="context">{'type': 'in_invoice'}</field>
         </record>
         <record model="ir.action.act_window.view" id="act_invoice_conform_invoice_form_view1">
@@ -35,7 +35,7 @@
         <record model="ir.action.act_window.domain" id="act_invoice_conform_invoice_domain_toconform">
             <field name="name">To Conform</field>
             <field name="sequence" eval="10"/>
-            <field name="domain">[('conformity_result', '=', 'to_conform')]</field>
+            <field name="domain">[('conformity_state', '=', 'pending')]</field>
             <field name="act_window" ref="act_invoice_conform_invoice_form"/>
         </record>
         <record model="ir.action.act_window.domain" id="act_invoice_conform_invoice_domain_conformed">
@@ -57,7 +57,7 @@
         <record model="ir.action.act_window" id="act_invoice_conform_credit_note_form">
             <field name="name">Credit Notes to Conform</field>
             <field name="res_model">account.invoice</field>
-            <field name="domain">[('type', '=', 'in_credit_note'), ('conformity_result', '!=', None)]</field>
+            <field name="domain">[('type', '=', 'in_credit_note'), ('conformity_state', '!=', None)]</field>
             <field name="context">{'type': 'in_credit_note'}</field>
         </record>
         <record model="ir.action.act_window.view" id="act_invoice_conform_credit_note_form_view1">
@@ -73,7 +73,7 @@
         <record model="ir.action.act_window.domain" id="act_invoice_conform_credit_note_domain_toconform">
             <field name="name">To Conform</field>
             <field name="sequence" eval="10"/>
-            <field name="domain">[('conformity_result', '=', 'to_conform')]</field>
+            <field name="domain">[('conformity_state', '=', 'pending')]</field>
             <field name="act_window" ref="act_invoice_conform_credit_note_form"/>
         </record>
         <record model="ir.action.act_window.domain" id="act_invoice_conform_credit_note_domain_conformed">
