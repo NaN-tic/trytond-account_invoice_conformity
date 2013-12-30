@@ -5,12 +5,14 @@
             <field name="type">form</field>
             <field name="inherit" ref="account_invoice.invoice_view_form"/>
             <field name="name">invoice_form</field>
+            <field name="domain">context['type'] in ('in_invoice', 'in_credit_note')</field>
         </record>
         <record model="ir.ui.view" id="invoice_view_tree">
             <field name="model">account.invoice</field>
             <field name="type">tree</field>
             <field name="inherit" ref="account_invoice.invoice_view_tree"/>
             <field name="name">invoice_tree</field>
+            <field name="domain">context['type'] in ('in_invoice', 'in_credit_note')</field>
         </record>
 
 
@@ -48,7 +50,7 @@
             <field name="domain">[('conformity_result', '=', 'disconformed')]</field>
             <field name="act_window" ref="act_invoice_conform_invoice_form"/>
         </record>
-        
+
         <menuitem parent="account_invoice.menu_invoices" action="act_invoice_conform_invoice_form"
             id="menu_invoice_conform_invoice_form" sequence="1"/>
 
