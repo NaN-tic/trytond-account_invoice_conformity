@@ -104,7 +104,7 @@ class Invoice:
 
     def get_rec_name(self, name):
         res = super(Invoice, self).get_rec_name(name)
-        if self.conformity_state in ('disconformed', 'to_conform') and \
-           self.conformity_result == 'pending':
+        if (self.conformity_state in ('disconformed', 'to_conform')
+                and self.conformity_result == 'pending'):
             res = '*' + res
         return res
