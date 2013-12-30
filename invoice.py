@@ -8,14 +8,16 @@ __all__ = ['Invoice']
 __metaclass__ = PoolMeta
 
 CONFORMITY_STATE = [
+    (None, ''),
     ('pending', 'Pending'),
-    ('closed', 'Closed'),]
+    ('closed', 'Closed'),
+    ]
 
 CONFORMITY_RESULT = [
-    ('to_conform', 'To Conform'),
+    (None, ''),
     ('conformed', 'Conformed'),
     ('disconformed', 'Disconformed'),
-]
+    ]
 
 
 class Invoice:
@@ -24,27 +26,24 @@ class Invoice:
     to_conform_by = fields.Many2One('res.user', 'Conform By',
         states={
             'required': Bool(Eval('conformity_result')),
-        })
-    conformity_state = fields.Selection([(None, None)] + CONFORMITY_STATE,
-        'Conformity State', states={
-            'required': Bool(Eval('conformity_result')),
-        })
-    conformity_result = fields.Selection([(None, None)] + CONFORMITY_RESULT,
-        'Conformity Result', states={
-            'required': Bool(Eval('conformity_result')),
-            }
-        )
-
+            })
+    conformity_state = fields.Selection(CONFORMITY_STATE, 'Conformity State',
+        states={
+            'required': Bool(Eval('to_conform_by')),
+            }, on_change_with=['to_conform_by', 'conformity_state'])
+    conformity_result = fields.Selection(CONFORMITY_RESULT, 'Conformity Result',
+        states={
+            'required': Eval('conformity_state') == 'closed',
+            })
     disconformity_culprit = fields.Selection([
-            (None, None),
+            (None, ''),
             ('supplier', 'Supplier'),
             ('company', 'Company'),
             ], 'Disconformity Culprit',
         states={
-            'required': (Bool(Eval('conformity_result')) &
-                (Eval('conformity_state', '') == 'pending'))
+            'required': ((Eval('conformity_result') == 'disconformed') &
+                (Eval('conformity_state', '') == 'closed'))
             })
-
     conformed_description = fields.Text('Conformed Description')
 
     @classmethod
@@ -61,6 +60,11 @@ class Invoice:
     @staticmethod
     def default_conformity_state():
         return None
+
+    def on_change_with_conformity_state(self):
+        if self.to_conform_by:
+            return 'pending'
+        return self.conformity_state
 
     def to_conform(self):
         if self.type not in ('in_invoice', 'in_credit_note'):
