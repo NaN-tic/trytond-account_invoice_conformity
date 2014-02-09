@@ -83,14 +83,14 @@ class Invoice:
         self.conformity_result = None
         if self.to_conform():
             self.conformity_state = 'pending'
-            self.conformity_result = 'to_conform'
+            self.conformity_result = None
         self.save()
 
     @classmethod
     def draft(cls, invoices):
         super(Invoice, cls).draft(invoices)
         cls.write(invoices, {
-                'conformity_state': None,
+                'conformity_state': 'pending',
                 'conformity_result': None,
                 })
 
