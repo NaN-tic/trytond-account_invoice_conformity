@@ -102,7 +102,7 @@ class Invoice:
 
     @classmethod
     def post(cls, invoices):
-        super(Invoice, cls).validate_invoice(invoices)
+        super(Invoice, cls).post(invoices)
         for invoice in invoices:
             invoice.set_conformity()
 
