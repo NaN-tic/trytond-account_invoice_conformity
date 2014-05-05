@@ -2,6 +2,10 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:account.invoice,conform_by:"
+msgid "Conform by"
+msgstr "Conformar por"
+
 msgctxt "field:account.invoice,conformed_description:"
 msgid "Conformed Description"
 msgstr "Descripción de la conformidad"
@@ -18,13 +22,73 @@ msgctxt "field:account.invoice,disconformity_culprit:"
 msgid "Disconformity Culprit"
 msgstr "Culpable de la conformidad"
 
-msgctxt "field:account.invoice,to_conform_by:"
-msgid "Conform By"
-msgstr "Conformar por"
+msgctxt "field:account.invoice,pending_to_resolve_conformity:"
+msgid "Pending to resolve conformity"
+msgstr "Pendiente de resolver la conformidad"
+
+msgctxt "field:account.invoice.conform_group,create_date:"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+msgctxt "field:account.invoice.conform_group,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
+msgctxt "field:account.invoice.conform_group,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:account.invoice.conform_group,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:account.invoice.conform_group,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:account.invoice.conform_group,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:account.invoice.conform_group,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "model:account.invoice.conform_group,name:"
+msgid "Conform Group"
+msgstr "Grupo de conformidad"
+
+msgctxt "model:ir.action,name:act_conform_group_form"
+msgid "Conform Group"
+msgstr "Grupo de conformidad"
+
+msgctxt "model:ir.action,name:act_invoice_conform_credit_note_form"
+msgid "Credit Notes to Conform"
+msgstr "Facturas de abono para conformar"
 
 msgctxt "model:ir.action,name:act_invoice_conform_invoice_form"
 msgid "Invoices to Conform"
 msgstr "Facturas para conformar"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_invoice_conform_credit_note_domain_conformed"
+msgid "Conformed"
+msgstr "Conforme"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_invoice_conform_credit_note_domain_disconformed"
+msgid "Disconformed"
+msgstr "Disconformed"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_invoice_conform_credit_note_domain_pending"
+msgid "Pending to resolve"
+msgstr "Pendiente de resolver"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_invoice_conform_credit_note_domain_toconform"
+msgid "To Conform"
+msgstr "Para conformar"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_invoice_conform_invoice_domain_conformed"
@@ -33,13 +97,26 @@ msgstr "Conforme"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_invoice_conform_invoice_domain_disconformed"
-msgid "Disonformed"
+msgid "Disconformed"
 msgstr "Disconformed"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_invoice_conform_invoice_domain_pending"
+msgid "Pending to resolve"
+msgstr "Pendiente de resolver"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_invoice_conform_invoice_domain_toconform"
 msgid "To Conform"
 msgstr "Para conformar"
+
+msgctxt "model:ir.ui.menu,name:menu_counform_group"
+msgid "Conform Groups"
+msgstr "Grupos de conformidad"
+
+msgctxt "model:ir.ui.menu,name:menu_invoice_conform_credit_note_form"
+msgid "Credit Notes to Conform"
+msgstr "Facturas de abono para conformar"
 
 msgctxt "model:ir.ui.menu,name:menu_invoice_conform_invoice_form"
 msgid "Invoices to Conform"
@@ -56,10 +133,6 @@ msgstr "Conformada"
 msgctxt "selection:account.invoice,conformity_result:"
 msgid "Disconformed"
 msgstr "Disconforme"
-
-msgctxt "selection:account.invoice,conformity_result:"
-msgid "To Conform"
-msgstr "Para conformar"
 
 msgctxt "selection:account.invoice,conformity_state:"
 msgid ""
@@ -84,3 +157,11 @@ msgstr "Compañia"
 msgctxt "selection:account.invoice,disconformity_culprit:"
 msgid "Supplier"
 msgstr "Proveedor"
+
+msgctxt "view:account.invoice.conform_group:"
+msgid "Conform Group"
+msgstr "Grupo de conformidad"
+
+msgctxt "view:account.invoice:"
+msgid "Conform"
+msgstr "Conformidad"

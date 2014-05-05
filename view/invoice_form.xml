@@ -2,16 +2,21 @@
 <!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
 this repository contains the full copyright notices and license terms. -->
 <data>
+    <xpath expr="/form/notebook/page[@id='invoice']/field[@name='lines']"
+            position="before">
+        <label name="conformity_state"/>
+        <field name="conformity_state"/>
+    </xpath>
     <xpath expr="/form/notebook/page[@id='info']" position="after">
         <page string="Conform" id="conform">
-            <label name="to_conform_by"/>
-            <field name="to_conform_by"/>
-            <label name="conformity_state"/>
-            <field name="conformity_state"/>
+            <label name="conform_by"/>
+            <field name="conform_by"/>
             <label name="conformity_result"/>
             <field name="conformity_result"/>
             <label name="disconformity_culprit"/>
             <field name="disconformity_culprit"/>
+            <label name="pending_to_resolve_conformity"/>
+            <field name="pending_to_resolve_conformity"/>
             <separator name="conformed_description" colspan="4"/>
             <field name="conformed_description" colspan="4"/>
         </page>

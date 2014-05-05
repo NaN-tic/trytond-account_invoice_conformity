@@ -4,8 +4,10 @@
 from trytond.pool import Pool
 from .invoice import *
 
+
 def register():
     Pool.register(
+        ConformGroup,
         Invoice,
         module='account_invoice_conformity', type_='model')
 
