@@ -48,10 +48,6 @@
                 parent="account.menu_account_configuration"
                 action="act_conform_group_form" sequence="50"/>
 
-        <menuitem parent="account_invoice.menu_invoice_in_credit_note_form"
-            action="act_invoice_conform_credit_note_form"
-            id="menu_invoice_conform_credit_note_form" sequence="1"/>
-
 
         <record model="ir.ui.view" id="invoice_view_form">
             <field name="model">account.invoice</field>
