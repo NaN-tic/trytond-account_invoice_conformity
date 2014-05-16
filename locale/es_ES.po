@@ -2,6 +2,14 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "error:account.invoice:"
+msgid "Invoice \"%s\" can not be posted because it is not conformed."
+msgstr "No se puede validar la factura \"%s\" porqué no esta conformada."
+
+msgctxt "field:account.configuration,ensure_conformity:"
+msgid "Ensure Conformity"
+msgstr "Validar conformidad"
+
 msgctxt "field:account.invoice,conform_by:"
 msgid "Conform by"
 msgstr "Conformar por"
@@ -53,6 +61,13 @@ msgstr "Fecha modificación"
 msgctxt "field:account.invoice.conform_group,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
+
+msgctxt "help:account.configuration,ensure_conformity:"
+msgid ""
+"If marked posted supplier invoices must be conformed before posting them."
+msgstr ""
+"Si se marca, las facturas de proveedor deberán ser conformadas antes de "
+"validarlas."
 
 msgctxt "model:account.invoice.conform_group,name:"
 msgid "Conform Group"

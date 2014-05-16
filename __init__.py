@@ -7,7 +7,7 @@ from .invoice import *
 
 def register():
     Pool.register(
+        Configuration,
         ConformGroup,
         Invoice,
         module='account_invoice_conformity', type_='model')
-
