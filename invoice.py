@@ -88,11 +88,6 @@ class Invoice:
     def default_conformity_state():
         return None
 
-    def on_change_with_conformity_state(self):
-        if self.conform_by:
-            return 'pending'
-        return self.conformity_state
-
     def to_conform(self):
         if self.type not in ('in_invoice', 'in_credit_note'):
             return False
