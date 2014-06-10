@@ -4,7 +4,7 @@ from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval, Bool
 
-__all__ = ['Configuration', 'ConformGroup', 'Invoice']
+__all__ = ['Configuration', 'ConformGroupUser', 'ConformGroup', 'Invoice']
 __metaclass__ = PoolMeta
 
 CONFORMITY_STATE = [
@@ -26,11 +26,22 @@ class Configuration:
         'posted supplier invoices must be conformed before posting them.')
 
 
+class ConformGroupUser(ModelSQL):
+    'Conform Group - Users'
+    __name__ = 'account.invoice.conform_group-res.user'
+
+    group = fields.Many2One('account.invoice.conform_group', 'Group',
+        required=True, select=True)
+    user = fields.Many2One('res.user', 'User', required=True, select=True)
+
+
 class ConformGroup(ModelSQL, ModelView):
     'Conform Group'
     __name__ = 'account.invoice.conform_group'
 
-    name = fields.Char('Name')
+    name = fields.Char('Name', required=True)
+    users = fields.Many2Many('account.invoice.conform_group-res.user',
+        'group', 'user', 'Users')
 
 
 class Invoice:

@@ -9,5 +9,6 @@ def register():
     Pool.register(
         Configuration,
         ConformGroup,
+        ConformGroupUser,
         Invoice,
         module='account_invoice_conformity', type_='model')

@@ -73,7 +73,7 @@
         <record model="ir.action.act_window" id="act_invoice_conform_invoice_form">
             <field name="name">Invoices to Conform</field>
             <field name="res_model">account.invoice</field>
-            <field name="domain">[('type', '=', 'in_invoice'), ('conformity_state', '!=', None)]</field>
+            <field name="domain">[('type', '=', 'in_invoice'), ('conformity_state', '!=', None), ('conform_by.users', '=', Eval('context', {}).get('_user', 0))]</field>
             <field name="context">{'type': 'in_invoice'}</field>
         </record>
         <record model="ir.action.act_window.view"
@@ -130,7 +130,7 @@
                  id="act_invoice_conform_credit_note_form">
             <field name="name">Credit Notes to Conform</field>
             <field name="res_model">account.invoice</field>
-            <field name="domain">[('type', '=', 'in_credit_note'), ('conformity_state', '!=', None)]</field>
+            <field name="domain">[('type', '=', 'in_credit_note'), ('conformity_state', '!=', None), ('conform_by.users', '=', Eval('context', {}).get('_user', 0))]</field>
             <field name="context">{'type': 'in_credit_note'}</field>
         </record>
         <record model="ir.action.act_window.view"

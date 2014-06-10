@@ -54,11 +54,47 @@ msgctxt "field:account.invoice.conform_group,rec_name:"
 msgid "Name"
 msgstr "Nombre"
 
+msgctxt "field:account.invoice.conform_group,users:"
+msgid "Users"
+msgstr "Usuarios"
+
 msgctxt "field:account.invoice.conform_group,write_date:"
 msgid "Write Date"
 msgstr "Fecha modificación"
 
 msgctxt "field:account.invoice.conform_group,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:account.invoice.conform_group-res.user,create_date:"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+msgctxt "field:account.invoice.conform_group-res.user,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
+msgctxt "field:account.invoice.conform_group-res.user,group:"
+msgid "Group"
+msgstr "Grupo"
+
+msgctxt "field:account.invoice.conform_group-res.user,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:account.invoice.conform_group-res.user,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:account.invoice.conform_group-res.user,user:"
+msgid "User"
+msgstr "Usuario"
+
+msgctxt "field:account.invoice.conform_group-res.user,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:account.invoice.conform_group-res.user,write_uid:"
 msgid "Write User"
 msgstr "Usuario modificación"
 
@@ -72,6 +108,10 @@ msgstr ""
 msgctxt "model:account.invoice.conform_group,name:"
 msgid "Conform Group"
 msgstr "Grupo de conformidad"
+
+msgctxt "model:account.invoice.conform_group-res.user,name:"
+msgid "Conform Group - Users"
+msgstr "Grupos de conformidad - Usuarios"
 
 msgctxt "model:ir.action,name:act_conform_group_form"
 msgid "Conform Group"
@@ -138,10 +178,6 @@ msgid "Invoices to Conform"
 msgstr "Facturas para conformar"
 
 msgctxt "selection:account.invoice,conformity_result:"
-msgid ""
-msgstr ""
-
-msgctxt "selection:account.invoice,conformity_result:"
 msgid "Conformed"
 msgstr "Conformada"
 
@@ -150,20 +186,12 @@ msgid "Disconformed"
 msgstr "Disconforme"
 
 msgctxt "selection:account.invoice,conformity_state:"
-msgid ""
-msgstr ""
-
-msgctxt "selection:account.invoice,conformity_state:"
 msgid "Closed"
 msgstr "Cerrado"
 
 msgctxt "selection:account.invoice,conformity_state:"
 msgid "Pending"
 msgstr "Pendiente"
-
-msgctxt "selection:account.invoice,disconformity_culprit:"
-msgid ""
-msgstr ""
 
 msgctxt "selection:account.invoice,disconformity_culprit:"
 msgid "Company"
