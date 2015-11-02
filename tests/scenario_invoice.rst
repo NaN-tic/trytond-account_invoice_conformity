@@ -204,7 +204,7 @@ Create in invoice::
     >>> invoice.state
     u'posted'
     >>> invoice.rec_name
-    u'***1'
+    u'***1 Party'
 
 Create out invoice::
 
