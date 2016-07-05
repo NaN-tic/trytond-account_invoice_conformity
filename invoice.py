@@ -2,7 +2,7 @@
 #copyright notices and license terms.
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import PoolMeta, Pool
-from trytond.pyson import Eval, Bool
+from trytond.pyson import Eval, Bool, Not, Equal
 
 __all__ = ['Configuration', 'ConformGroupUser', 'ConformGroup', 'Invoice']
 __metaclass__ = PoolMeta
@@ -54,7 +54,7 @@ class Invoice:
             })
     conformity_state = fields.Selection(CONFORMITY_STATE, 'Conformity State',
         states={
-            'invisible': ~Eval('type').in_(['in_invoice', 'in_credit_note']),
+            'invisible': Not(Equal(Eval('type'), 'in')),
             },
         depends=['type'])
     conformity_result = fields.Selection(CONFORMITY_RESULT,
@@ -100,7 +100,7 @@ class Invoice:
         return None
 
     def to_conform(self):
-        if self.type not in ('in_invoice', 'in_credit_note'):
+        if self.type != 'in':
             return False
         InvoiceLine = Pool().get('account.invoice.line')
         lines = InvoiceLine.search([('origin', '=', None),

@@ -59,14 +59,14 @@
             <field name="type" eval="None"/>
             <field name="inherit" ref="account_invoice.invoice_view_form"/>
             <field name="name">invoice_form</field>
-            <field name="domain">context.get('type') in ('in_invoice', 'in_credit_note')</field>
+            <field name="domain">context.get('type') == 'in'</field>
         </record>
         <record model="ir.ui.view" id="invoice_view_tree">
             <field name="model">account.invoice</field>
             <field name="type" eval="None"/>
             <field name="inherit" ref="account_invoice.invoice_view_tree"/>
             <field name="name">invoice_tree</field>
-            <field name="domain">context.get('type') in ('in_invoice', 'in_credit_note')</field>
+            <field name="domain">context.get('type') = 'in'</field>
         </record>
 
 
@@ -74,9 +74,9 @@
             <field name="name">Invoices to Conform</field>
             <field name="res_model">account.invoice</field>
             <field name="domain"
-                eval="[('type', '=', 'in_invoice'), ('conformity_state', '!=', None), ('conform_by.users', '=', Eval('context', {}).get('_user', 0))]"
+                eval="[('type', '=', 'in'), ('conformity_state', '!=', None), ('conform_by.users', '=', Eval('context', {}).get('_user', 0))]"
                 pyson="1"/>
-            <field name="context">{'type': 'in_invoice'}</field>
+            <field name="context" eval="{'type': 'in'}" pyson="1"/>
         </record>
         <record model="ir.action.act_window.view"
                  id="act_invoice_conform_invoice_form_view1">
@@ -127,80 +127,12 @@
             <field name="act_window" ref="act_invoice_conform_invoice_form"/>
         </record>
 
-        <menuitem parent="account_invoice.menu_invoice_in_invoice_form" action="act_invoice_conform_invoice_form"
+        <menuitem parent="account_invoice.menu_invoice_in_form" action="act_invoice_conform_invoice_form"
             id="menu_invoice_conform_invoice_form" sequence="1"/>
 
         <record model="ir.ui.menu-res.group"
             id="menu_invoice_conform_invoice_form_admin_group">
             <field name="menu" ref="menu_invoice_conform_invoice_form"/>
-            <field name="group" ref="account.group_account_admin"/>
-        </record>
-
-        <record model="ir.action.act_window"
-                 id="act_invoice_conform_credit_note_form">
-            <field name="name">Credit Notes to Conform</field>
-            <field name="res_model">account.invoice</field>
-            <field name="domain"
-                eval="[('type', '=', 'in_credit_note'), ('conformity_state', '!=', None), ('conform_by.users', '=', Eval('context', {}).get('_user', 0))]"
-                pyson="1"/>
-            <field name="context">{'type': 'in_credit_note'}</field>
-        </record>
-        <record model="ir.action.act_window.view"
-                 id="act_invoice_conform_credit_note_form_view1">
-            <field name="sequence" eval="10"/>
-            <field name="view" ref="invoice_view_tree"/>
-            <field name="act_window" ref="act_invoice_conform_credit_note_form"/>
-        </record>
-        <record model="ir.action.act_window.view"
-                 id="act_invoice_conform_credit_note_form_view2">
-            <field name="sequence" eval="20"/>
-            <field name="view" ref="invoice_view_form"/>
-            <field name="act_window" ref="act_invoice_conform_credit_note_form"/>
-        </record>
-        <record model="ir.action.act_window.domain"
-                 id="act_invoice_conform_credit_note_domain_toconform">
-            <field name="name">To Conform</field>
-            <field name="sequence" eval="10"/>
-            <field name="domain"
-                eval="[('conformity_state', '=', 'pending')]"
-                pyson="1"/>
-            <field name="act_window" ref="act_invoice_conform_credit_note_form"/>
-        </record>
-        <record model="ir.action.act_window.domain"
-                 id="act_invoice_conform_credit_note_domain_conformed">
-            <field name="name">Conformed</field>
-            <field name="sequence" eval="20"/>
-            <field name="domain"
-                eval="[('conformity_result', '=', 'conformed')]"
-                pyson="1"/>
-            <field name="act_window" ref="act_invoice_conform_credit_note_form"/>
-        </record>
-        <record model="ir.action.act_window.domain"
-                 id="act_invoice_conform_credit_note_domain_pending">
-            <field name="name">Pending to resolve</field>
-            <field name="sequence" eval="30"/>
-            <field name="domain"
-                eval="[('pending_to_resolve_conformity', '=', True)]"
-                pyson="1"/>
-            <field name="act_window" ref="act_invoice_conform_credit_note_form"/>
-        </record>
-        <record model="ir.action.act_window.domain"
-                 id="act_invoice_conform_credit_note_domain_disconformed">
-            <field name="name">Disconformed</field>
-            <field name="sequence" eval="40"/>
-            <field name="domain"
-                eval="[('conformity_result', '=', 'disconformed')]"
-                pyson="1"/>
-            <field name="act_window" ref="act_invoice_conform_credit_note_form"/>
-        </record>
-
-        <menuitem parent="account_invoice.menu_invoice_in_credit_note_form"
-            action="act_invoice_conform_credit_note_form"
-            id="menu_invoice_conform_credit_note_form" sequence="1"/>
-
-        <record model="ir.ui.menu-res.group"
-            id="menu_invoice_conform_credit_note_form_admin_group">
-            <field name="menu" ref="menu_invoice_conform_credit_note_form"/>
             <field name="group" ref="account.group_account_admin"/>
         </record>
 
