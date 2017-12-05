@@ -1,6 +1,18 @@
 <?xml version="1.0"?>
 <tryton>
-    <data>
+  <data>
+
+        <record model="res.group" id="group_conform">
+            <field name="name">Conform</field>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_conform">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_conform"/>
+        </record>
+        <record model="res.user-res.group" id="user_trigger_group_conform">
+            <field name="user" ref="res.user_trigger"/>
+            <field name="group" ref="group_conform"/>
+        </record>
         <record model="ir.ui.view" id="configuration_view_form">
             <field name="model">account.configuration</field>
             <field name="inherit" ref="account.configuration_view_form"/>
@@ -16,7 +28,6 @@
             <field name="type">tree</field>
             <field name="name">conform_group_tree</field>
         </record>
-
         <record model="ir.action.act_window" id="act_conform_group_form">
             <field name="name">Conform Group</field>
             <field name="res_model">account.invoice.conform_group</field>
@@ -31,7 +42,6 @@
             <field name="view" ref="conform_group_view_form"/>
             <field name="act_window" ref="act_conform_group_form"/>
         </record>
-
         <record model="ir.model.access" id="access_conform_group">
             <field name="model"
                 search="[('model', '=', 'account.invoice.conform_group')]"/>
@@ -49,12 +59,9 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_delete" eval="True"/>
         </record>
-
         <menuitem id="menu_counform_group" name="Conform Groups"
                 parent="account.menu_account_configuration"
                 action="act_conform_group_form" sequence="50"/>
-
-
         <record model="ir.ui.view" id="invoice_view_form">
             <field name="model">account.invoice</field>
             <field name="type" eval="None"/>
@@ -73,8 +80,6 @@
                 eval="[(Eval('context', {}).get('type'), '=', 'in')]"
                 pyson="1"/>
         </record>
-
-
         <record model="ir.action.act_window" id="act_invoice_conform_invoice_form">
             <field name="name">Invoices to Conform</field>
             <field name="res_model">account.invoice</field>
@@ -106,28 +111,28 @@
         </record>
         <record model="ir.action.act_window.domain"
                  id="act_invoice_conform_invoice_domain_conformed">
-            <field name="name">Conformed</field>
+            <field name="name">Conforming</field>
             <field name="sequence" eval="20"/>
             <field name="domain"
-                eval="[('conformity_result', '=', 'conformed')]"
+                eval="[('conformity_state', '=', 'conformed')]"
                 pyson="1"/>
             <field name="act_window" ref="act_invoice_conform_invoice_form"/>
         </record>
         <record model="ir.action.act_window.domain"
                  id="act_invoice_conform_invoice_domain_pending">
-            <field name="name">Pending to resolve</field>
+            <field name="name">Nonconforming pending</field>
             <field name="sequence" eval="30"/>
             <field name="domain"
-                eval="[('pending_to_resolve_conformity', '=', True)]"
+                eval="[('conformity_state', '=', 'disconformed_pending')]"
                 pyson="1"/>
             <field name="act_window" ref="act_invoice_conform_invoice_form"/>
         </record>
         <record model="ir.action.act_window.domain"
                  id="act_invoice_conform_invoice_domain_disconformed">
-            <field name="name">Disconformed</field>
+            <field name="name">Nonconforming</field>
             <field name="sequence" eval="40"/>
             <field name="domain"
-                eval="[('conformity_result', '=', 'disconformed')]"
+                eval="[('conformity_state', '=', 'disconformed')]"
                 pyson="1"/>
             <field name="act_window" ref="act_invoice_conform_invoice_form"/>
         </record>
@@ -141,5 +146,14 @@
             <field name="group" ref="account.group_account_admin"/>
         </record>
 
+        <record model="ir.model.button" id="conform_button">
+            <field name="name">conform</field>
+            <field name="model" search="[('model', '=', 'account.invoice')]"/>
+        </record>
+        <record model="ir.model.button-res.group"
+                id="conform_button_group">
+            <field name="button" ref="conform_button"/>
+            <field name="group" ref="group_conform"/>
+        </record>
     </data>
 </tryton>
