@@ -11,10 +11,10 @@ this repository contains the full copyright notices and license terms. -->
         <page string="Conform" id="conform">
             <label name="conform_by"/>
             <field name="conform_by"/>
-            <label name="disconformity_culprit"/>
-            <field name="disconformity_culprit"/>
-            <separator name="conformed_description" colspan="4"/>
-            <field name="conformed_description" colspan="4"/>
+            <label name="nonconformity_culprit"/>
+            <field name="nonconformity_culprit"/>
+            <separator name="conforming_description" colspan="4"/>
+            <field name="conforming_description" colspan="4"/>
         </page>
     </xpath>
 </data>
