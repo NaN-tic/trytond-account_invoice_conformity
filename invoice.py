@@ -13,8 +13,8 @@ CONFORMITY_STATE = [
     (None, ''),
     ('pending', 'Pending'),
     ('conforming', 'Conforming'),
-    ('nonconforming', 'Nonconforming'),
     ('nonconforming_pending', 'Nonconforming Pending'),
+    ('nonconforming', 'Nonconforming'),
     ]
 
 
@@ -53,7 +53,7 @@ class Invoice:
         states={
             'invisible': Not(Equal(Eval('type'), 'in')),
             },
-        depends=['type'])
+        depends=['type'], sort=False)
     nonconformity_culprit = fields.Selection([
             (None, ''),
             ('supplier', 'Supplier'),
@@ -153,7 +153,8 @@ class Invoice:
 
     def get_rec_name(self, name):
         res = super(Invoice, self).get_rec_name(name)
-        if self.conformity_state == 'pending':
+        if (self.conformity_state in ('pending',
+                'nonconforming_pending')):
             res = '***' + res
         return res
 
@@ -170,20 +171,6 @@ class Invoice:
             cls.write(to_pending, {
                     'conformity_state': 'pending',
                     })
-
-    @classmethod
-    def validate_invoice(cls, invoices):
-        super(Invoice, cls).validate_invoice(invoices)
-
-        to_conforming = []
-        for invoice in invoices:
-            if invoice.to_conforming():
-                to_conforming.append(invoice)
-
-        if to_conforming:
-            cls.write(to_conforming, {
-                'conformity_state': 'conforming',
-                })
 
     @classmethod
     def post(cls, invoices):

@@ -49,9 +49,27 @@ Create account user::
     >>> account_user.main_company = company
     >>> account_group, = Group.find([('name', '=', 'Account')])
     >>> account_user.groups.append(account_group)
-    >>> conform_group, = Group.find([('name', '=', 'Conform')])
-    >>> account_user.groups.append(conform_group)
     >>> account_user.save()
+
+Create account admin user::
+
+    >>> account_user_admin = User()
+    >>> account_user_admin.name = 'Account Admin'
+    >>> account_user_admin.login = 'account_admin'
+    >>> account_user_admin.main_company = company
+    >>> account_admin_group, = Group.find([('name', '=', 'Account Administration')])
+    >>> account_user_admin.groups.append(account_admin_group)
+    >>> account_user_admin.save()
+
+Create conformity user::
+
+    >>> conform_user = User()
+    >>> conform_user.name = 'Conformity'
+    >>> conform_user.login = 'conformity'
+    >>> conform_user.main_company = company
+    >>> conform_group, = Group.find([('name', '=', 'Conform')])
+    >>> conform_user.groups.append(conform_group)
+    >>> conform_user.save()
 
 Create fiscal year::
 
@@ -116,15 +134,17 @@ Create payment term::
     >>> payment_term.lines.append(payment_term_line)
     >>> payment_term.save()
 
-Create a conform group:
+Create a conform group::
 
+
+    >>> config.user = account_user_admin.id
     >>> ConformGroup = Model.get('account.invoice.conform_group')
     >>> conform_group = ConformGroup()
     >>> conform_group.name = 'Account Conform Group'
-    >>> conform_group.users.append(account_user)
+    >>> conform_group.users.append(conform_user)
     >>> conform_group.save()
 
-Create in invoice::
+Create an invoice::
 
     >>> config.user = account_user.id
     >>> Invoice = Model.get('account.invoice')
@@ -140,14 +160,10 @@ Create in invoice::
     >>> line.quantity = 5
     >>> line.unit_price = Decimal('20')
     >>> invoice.save()
-    >>> Invoice.post([invoice.id], config.context)
+    >>> Invoice.post([invoice.id], config.context)   # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
-        ...
+    ...
     UserError: ('UserError', (u'Invoice "1 Party" can not be posted because it is pending to conformed.', ''))
-    >>> Invoice.validate_invoice([invoice.id], config.context)
-    >>> invoice.reload()
-    >>> invoice.conformity_state == 'conforming'
-    True
     >>> invoice.conform_by = conform_group
     >>> invoice.save()
     >>> Invoice.conform([invoice.id], config.context)
@@ -158,8 +174,16 @@ Create in invoice::
     >>> invoice.conformity_state == 'conforming'
     True
 
+Ensure the conform user can change conformity state::
+
+    >>> config.user = conform_user.id
+    >>> invoice.conformity_state = ''
+    >>> invoice.conformity_state == ''
+    True
+
 Create out invoice::
 
+    >>> config.user = account_user.id
     >>> invoice = Invoice()
     >>> invoice.party = party
     >>> invoice.payment_term = payment_term
