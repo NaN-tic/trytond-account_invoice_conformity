@@ -119,7 +119,22 @@ class Invoice:
 
     @staticmethod
     def default_conformity_state():
-        return None
+        Company = Pool().get('company.company')
+        company_id = Transaction().context.get('company')
+        company, = Company.search([('id','=',company_id),])
+        if company.default_conformity_state:
+            return company.default_conformity_state
+        else:
+            return None
+
+    @staticmethod
+    def default_conform_by():
+        ConformGroup = Pool().get('account.invoice.conform_group')
+        conform_groups = ConformGroup.search([()])
+        if conform_groups:
+            return conform_groups[0].id
+        else:
+            return None
 
     def to_conforming(self):
         Config = Pool().get('account.configuration')
@@ -153,9 +168,10 @@ class Invoice:
 
     def get_rec_name(self, name):
         res = super(Invoice, self).get_rec_name(name)
-        if (self.conformity_state in ('pending',
-                'nonconforming_pending')):
-            res = '***' + res
+        if self.conformity_state == 'pending':
+            return ' P*** ' + res
+        if self.conformity_state == 'nonconforming_pending':
+            return ' NCP*** ' + res
         return res
 
     @classmethod

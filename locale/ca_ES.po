@@ -1,10 +1,11 @@
-# 
+#
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "error:account.invoice:"
-msgid "Invoice \"%s\" can not be posted because it is not conformed."
-msgstr "La factura \"%s\" no es pot validar perquè no està conformada."
+msgid "Invoice \"%s\" can not be posted because it is pending to conformed."
+msgstr ""
+"La factura \"%s\" no es pot comptabilitzar perquè està pendent de conformar"
 
 msgctxt "field:account.configuration,ensure_conformity:"
 msgid "Ensure Conformity"
@@ -12,27 +13,19 @@ msgstr "Validar conformitat"
 
 msgctxt "field:account.invoice,conform_by:"
 msgid "Conform by"
-msgstr "A conformar per"
+msgstr "Conformar per"
 
-msgctxt "field:account.invoice,conformed_description:"
-msgid "Conformed Description"
+msgctxt "field:account.invoice,conforming_description:"
+msgid "Conforming Description"
 msgstr "Descripció de la conformitat"
-
-msgctxt "field:account.invoice,conformity_result:"
-msgid "Conformity Result"
-msgstr "Resultat de la conformitat"
 
 msgctxt "field:account.invoice,conformity_state:"
 msgid "Conformity State"
 msgstr "Estat de la conformitat"
 
-msgctxt "field:account.invoice,disconformity_culprit:"
-msgid "Disconformity Culprit"
-msgstr "Culpable de la disconformitat"
-
-msgctxt "field:account.invoice,pending_to_resolve_conformity:"
-msgid "Pending to resolve conformity"
-msgstr "Pendent de resoldre conformitat"
+msgctxt "field:account.invoice,nonconformity_culprit:"
+msgid "Nonconformity Culprit"
+msgstr "Culpable de la no conformitat"
 
 msgctxt "field:account.invoice.conform_group,create_date:"
 msgid "Create Date"
@@ -98,9 +91,13 @@ msgctxt "field:account.invoice.conform_group-res.user,write_uid:"
 msgid "Write User"
 msgstr "Usuari modificació"
 
+msgctxt "field:company.company,default_conformity_state:"
+msgid "Default Conformity State"
+msgstr "Estat de la conformitat per defecte"
+
 msgctxt "help:account.configuration,ensure_conformity:"
 msgid ""
-"If marked posted supplier invoices must be conformed before posting them."
+"If marked posted supplier invoices must be conforming before posting them."
 msgstr ""
 "Si es marca les factures de proveïdor hauran de ser conformades abans de ser"
 " validades."
@@ -113,93 +110,112 @@ msgctxt "model:account.invoice.conform_group-res.user,name:"
 msgid "Conform Group - Users"
 msgstr "Grup de conformitats - Usuari"
 
+msgctxt "model:ir.action,name:"
+msgid "Credit Notes to Conform"
+msgstr "Factures de abonament a conformar"
+
 msgctxt "model:ir.action,name:act_conform_group_form"
 msgid "Conform Group"
 msgstr "Grup de conformitats"
-
-msgctxt "model:ir.action,name:act_invoice_conform_credit_note_form"
-msgid "Credit Notes to Conform"
-msgstr "Factures de abonament a conformar"
 
 msgctxt "model:ir.action,name:act_invoice_conform_invoice_form"
 msgid "Invoices to Conform"
 msgstr "Factures a conformar"
 
-msgctxt ""
-"model:ir.action.act_window.domain,name:act_invoice_conform_credit_note_domain_conformed"
+msgctxt "model:ir.action.act_window.domain,name:"
 msgid "Conformed"
-msgstr "Conformada"
-
-msgctxt ""
-"model:ir.action.act_window.domain,name:act_invoice_conform_credit_note_domain_disconformed"
-msgid "Disconformed"
-msgstr "No Conforme"
-
-msgctxt ""
-"model:ir.action.act_window.domain,name:act_invoice_conform_credit_note_domain_pending"
-msgid "Pending to resolve"
-msgstr "Pendent de resoldre"
-
-msgctxt ""
-"model:ir.action.act_window.domain,name:act_invoice_conform_credit_note_domain_toconform"
-msgid "To Conform"
-msgstr "Per conformar"
+msgstr "Conforme"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_invoice_conform_invoice_domain_conformed"
-msgid "Conformed"
-msgstr "Conformada"
+msgid "Conforming"
+msgstr "Conforme"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_invoice_conform_invoice_domain_disconformed"
-msgid "Disconformed"
-msgstr "No Conforme"
+msgid "Nonconforming"
+msgstr "No conforme"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_invoice_conform_invoice_domain_pending"
-msgid "Pending to resolve"
-msgstr "Pendent de resoldre"
+msgid "Nonconforming Pending"
+msgstr "No conforme pendent"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_invoice_conform_invoice_domain_toconform"
 msgid "To Conform"
 msgstr "Per conformar"
 
+msgctxt "model:ir.ui.menu,name:"
+msgid "Credit Notes to Conform"
+msgstr "Factures de abonament a conformar"
+
 msgctxt "model:ir.ui.menu,name:menu_counform_group"
 msgid "Conform Groups"
 msgstr "Grups de conformitats"
-
-msgctxt "model:ir.ui.menu,name:menu_invoice_conform_credit_note_form"
-msgid "Credit Notes to Conform"
-msgstr "Factures de abonament a conformar"
 
 msgctxt "model:ir.ui.menu,name:menu_invoice_conform_invoice_form"
 msgid "Invoices to Conform"
 msgstr "Factures a conformar"
 
-msgctxt "selection:account.invoice,conformity_result:"
-msgid "Conformed"
-msgstr "Conformada"
+msgctxt "model:res.group,name:group_conform"
+msgid "Conform"
+msgstr "Conformitat"
 
-msgctxt "selection:account.invoice,conformity_result:"
-msgid "Disconformed"
-msgstr "No Conforme"
+#, fuzzy
+msgctxt "selection:account.invoice,conformity_state:"
+msgid ""
+msgstr " "
 
 msgctxt "selection:account.invoice,conformity_state:"
-msgid "Closed"
-msgstr "Tancat"
+msgid "Conforming"
+msgstr "Conforme"
+
+msgctxt "selection:account.invoice,conformity_state:"
+msgid "Nonconforming"
+msgstr "No conforme"
+
+msgctxt "selection:account.invoice,conformity_state:"
+msgid "Nonconforming Pending"
+msgstr "No conforme pendent"
 
 msgctxt "selection:account.invoice,conformity_state:"
 msgid "Pending"
 msgstr "Pendent"
 
-msgctxt "selection:account.invoice,disconformity_culprit:"
+#, fuzzy
+msgctxt "selection:account.invoice,nonconformity_culprit:"
+msgid ""
+msgstr " "
+
+msgctxt "selection:account.invoice,nonconformity_culprit:"
 msgid "Company"
 msgstr "Empresa"
 
-msgctxt "selection:account.invoice,disconformity_culprit:"
+msgctxt "selection:account.invoice,nonconformity_culprit:"
 msgid "Supplier"
 msgstr "Proveïdor"
+
+#, fuzzy
+msgctxt "selection:company.company,default_conformity_state:"
+msgid ""
+msgstr " "
+
+msgctxt "selection:company.company,default_conformity_state:"
+msgid "Conforming"
+msgstr "Conforme"
+
+msgctxt "selection:company.company,default_conformity_state:"
+msgid "Nonconforming"
+msgstr "No conforme"
+
+msgctxt "selection:company.company,default_conformity_state:"
+msgid "Nonconforming Pending"
+msgstr "No conforme pendent"
+
+msgctxt "selection:company.company,default_conformity_state:"
+msgid "Pending"
+msgstr "Pendent"
 
 msgctxt "view:account.invoice.conform_group:"
 msgid "Conform Group"

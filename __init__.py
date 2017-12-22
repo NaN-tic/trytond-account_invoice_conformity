@@ -2,6 +2,7 @@
 #copyright notices and license terms.
 from trytond.pool import Pool
 from . import invoice
+from . import company
 
 
 def register():
@@ -10,4 +11,5 @@ def register():
         invoice.ConformGroup,
         invoice.ConformGroupUser,
         invoice.Invoice,
+        company.Company,
         module='account_invoice_conformity', type_='model')
