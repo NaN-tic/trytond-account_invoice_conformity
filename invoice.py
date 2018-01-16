@@ -121,7 +121,7 @@ class Invoice:
     def default_conformity_state():
         Company = Pool().get('company.company')
         company_id = Transaction().context.get('company')
-        company, = Company.search([('id','=',company_id),])
+        company, = Company.search([('id', '=', company_id), ])
         if company.default_conformity_state:
             return company.default_conformity_state
         else:
@@ -136,13 +136,17 @@ class Invoice:
         else:
             return None
 
+    @fields.depends('conform_by')
+    def on_change_conformity_state(self):
+        self.conform_by = self.default_conform_by()
+
     def to_conforming(self):
         Config = Pool().get('account.configuration')
         config = Config(1)
 
         if ((not config.ensure_conformity)
                 or (self.type != 'in')
-                or (self.conformity_state != None)):
+                or (self.conformity_state is not None)):
             return False
         return True
 
@@ -152,7 +156,7 @@ class Invoice:
 
         if ((not config.ensure_conformity)
                 or (self.type != 'in')
-                or (self.conformity_state == None)):
+                or (self.conformity_state is None)):
             return False
         return True
 
@@ -198,7 +202,7 @@ class Invoice:
     @ModelView.button
     def conform(cls, invoices):
         cls.write(invoices, {
-            'conformity_state' : 'conforming',
+            'conformity_state': 'conforming',
             })
 
     @classmethod
@@ -210,11 +214,25 @@ class Invoice:
 
     @classmethod
     def copy(cls, invoices, default=None):
-        if default is None:
-            default = {}
-        default = default.copy()
-        default['conform_by'] = None
-        default['conformity_state'] = None
-        default['nonconformity_culprit'] = None
-        default['conforming_description'] = None
-        return super(Invoice, cls).copy(invoices, default=default)
+        invoices_w_cs = []
+        invoices_wo_cs = []
+
+        for invoice in invoices:
+            if invoice.conformity_state:
+                invoices_w_cs.append(invoice)
+            else:
+                invoices_wo_cs.append(invoice)
+        new_records = []
+        if default:
+            new_default = default.copy()
+        else:
+            new_default = {}
+        if invoices_wo_cs:
+            new_records += super(Invoice, cls).copy(invoices_wo_cs,
+                default=new_default)
+        if invoices_w_cs:
+            new_default['conformity_state'] = 'pending'
+            new_records += super(Invoice, cls).copy(invoices_w_cs,
+                default=new_default)
+
+        return new_records
