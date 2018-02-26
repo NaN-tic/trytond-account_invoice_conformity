@@ -8,7 +8,7 @@ this repository contains the full copyright notices and license terms. -->
         <field name="conformity_state"/>
     </xpath>
     <xpath expr="/form/notebook/page[@id='info']" position="after">
-        <page string="Conform" id="conform" states="{'invisible': ~Eval('type').ii"n_(['in_invoice', 'in_credit_note'])}">
+        <page string="Conform" id="conform" states="{'invisible': ~Eval('type').in_(['in_invoice', 'in_credit_note'])}">
             <label name="conform_by"/>
             <field name="conform_by"/>
             <label name="conformity_result"/>
