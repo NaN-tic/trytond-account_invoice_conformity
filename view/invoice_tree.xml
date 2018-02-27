@@ -4,6 +4,7 @@ this repository contains the full copyright notices and license terms. -->
 <data>
     <xpath expr="/tree/field[@name='description']" position="after">
       <field name="conformity_state"/>
+      <field name="conform_by" tree_invisible="1"/>
       <button name="conform" string="Conform" tree_invisible="1"/>
     </xpath>
 </data>

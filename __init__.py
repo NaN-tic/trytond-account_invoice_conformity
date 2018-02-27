@@ -3,6 +3,7 @@
 from trytond.pool import Pool
 from . import configuration
 from . import invoice
+from . import user
 
 
 def register():
@@ -11,4 +12,5 @@ def register():
         invoice.ConformGroup,
         invoice.ConformGroupUser,
         invoice.Invoice,
+        user.User,
         module='account_invoice_conformity', type_='model')

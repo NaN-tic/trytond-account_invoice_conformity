@@ -13,6 +13,32 @@
             <field name="group" ref="group_conform"/>
         </record>
 
+        <!-- conform group user -->
+        <record model="ir.ui.view" id="conform_group_user_view_form">
+            <field name="model">account.invoice.conform_group-res.user</field>
+            <field name="type">form</field>
+            <field name="name">conform_group_user_form</field>
+        </record>
+        <record model="ir.ui.view" id="conform_group_user_view_tree">
+            <field name="model">account.invoice.conform_group-res.user</field>
+            <field name="type">tree</field>
+            <field name="name">conform_group_user_tree</field>
+        </record>
+        <record model="ir.action.act_window" id="act_conform_group_user_form">
+            <field name="name">Conform Group User</field>
+            <field name="res_model">account.invoice.conform_group-res.user</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_conform_group_user_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="conform_group_user_view_tree"/>
+            <field name="act_window" ref="act_conform_group_user_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_conform_group_user_form_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="conform_group_user_view_form"/>
+            <field name="act_window" ref="act_conform_group_user_form"/>
+        </record>
+
         <!-- conform group -->
         <record model="ir.ui.view" id="conform_group_view_form">
             <field name="model">account.invoice.conform_group</field>

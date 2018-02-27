@@ -18,7 +18,7 @@ CONFORMITY_STATE = [
     ]
 
 
-class ConformGroupUser(ModelSQL):
+class ConformGroupUser(ModelSQL, ModelView):
     'Conform Group - Users'
     __name__ = 'account.invoice.conform_group-res.user'
     group = fields.Many2One('account.invoice.conform_group', 'Group',

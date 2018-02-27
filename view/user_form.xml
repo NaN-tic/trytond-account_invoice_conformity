@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!-- This file is part electronic_mail module for Tryton.
+The COPYRIGHT file at the top level of this repository contains the full copyright notices and license terms. -->
+<data>
+    <xpath expr="/form/notebook" position="inside" >
+          <page id="conform_groups" string="Invoice Conform Groups">
+              <field name="conform_groups" colspan="4"/>
+          </page>
+    </xpath>
+</data>
