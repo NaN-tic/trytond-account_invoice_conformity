@@ -13,13 +13,6 @@
             <field name="group" ref="group_conform"/>
         </record>
 
-        <!-- account configuration -->
-        <record model="ir.ui.view" id="configuration_view_form">
-            <field name="model">account.configuration</field>
-            <field name="inherit" ref="account.configuration_view_form"/>
-            <field name="name">configuration_form</field>
-        </record>
-
         <!-- conform group -->
         <record model="ir.ui.view" id="conform_group_view_form">
             <field name="model">account.invoice.conform_group</field>

@@ -7,7 +7,7 @@ from trytond import backend
 from trytond.transaction import Transaction
 from sql.conditionals import Case
 
-__all__ = ['Configuration', 'ConformGroupUser', 'ConformGroup', 'Invoice']
+__all__ = ['ConformGroupUser', 'ConformGroup', 'Invoice']
 
 CONFORMITY_STATE = [
     (None, ''),
@@ -16,13 +16,6 @@ CONFORMITY_STATE = [
     ('nonconforming_pending', 'Nonconforming Pending'),
     ('nonconforming', 'Nonconforming'),
     ]
-
-
-class Configuration:
-    __metaclass__ = PoolMeta
-    __name__ = 'account.configuration'
-    ensure_conformity = fields.Boolean('Ensure Conformity', help='If marked '
-        'posted supplier invoices must be conforming before posting them.')
 
 
 class ConformGroupUser(ModelSQL):
@@ -119,22 +112,17 @@ class Invoice:
 
     @staticmethod
     def default_conformity_state():
-        Company = Pool().get('company.company')
-        company_id = Transaction().context.get('company')
-        company, = Company.search([('id', '=', company_id), ])
-        if company.default_conformity_state:
-            return company.default_conformity_state
-        else:
-            return None
+        Config = Pool().get('account.configuration')
+        config = Config(1)
+        return config.default_conformity_state
 
     @staticmethod
     def default_conform_by():
         ConformGroup = Pool().get('account.invoice.conform_group')
-        conform_groups = ConformGroup.search([()])
+
+        conform_groups = ConformGroup.search([], limit=1)
         if conform_groups:
             return conform_groups[0].id
-        else:
-            return None
 
     @fields.depends('conform_by')
     def on_change_conformity_state(self):
