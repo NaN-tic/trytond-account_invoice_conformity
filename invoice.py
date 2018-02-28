@@ -126,7 +126,8 @@ class Invoice:
 
     @fields.depends('conform_by')
     def on_change_conformity_state(self):
-        self.conform_by = self.default_conform_by()
+        if not self.conform_by:
+            self.conform_by = self.default_conform_by()
 
     def to_conforming(self):
         Config = Pool().get('account.configuration')
