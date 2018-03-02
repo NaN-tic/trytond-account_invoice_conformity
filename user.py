@@ -25,5 +25,3 @@ class User:
         if self.user_conform_groups:
             cgs = [ucg.group.id for ucg in self.user_conform_groups]
             return cgs
-        else:
-            return None
