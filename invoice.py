@@ -142,7 +142,7 @@ class Invoice:
         config = pool.get('account.configuration').get_singleton()
         if not config or not config.ensure_conformity:
             return
-        if self.to_conform() and not self.conformity_state:
+        if self.to_conform() and not self.conformity_state == 'closed':
             self.raise_user_error('post_conformed', self.rec_name)
 
     def get_rec_name(self, name):
