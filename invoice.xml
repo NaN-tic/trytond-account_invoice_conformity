@@ -151,7 +151,8 @@
 
         <menuitem parent="account_invoice.menu_invoice_in_form"
             action="act_invoice_conform_invoice_form"
-            id="menu_invoice_conform_invoice_form" sequence="1"/>
+            id="menu_invoice_conform_invoice_form" sequence="1"
+            icon="tryton-list"/>
 
         <record model="ir.ui.menu-res.group"
             id="menu_invoice_conform_invoice_form_admin_group">
