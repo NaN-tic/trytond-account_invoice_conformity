@@ -2,7 +2,7 @@
 <!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
 this repository contains the full copyright notices and license terms. -->
 <data>
-    <xpath expr="/tree/field[@name='description']" position="after">
+    <xpath expr="//field[@name='total_amount']" position="after">
       <field name="conformity_state"/>
       <field name="conform_by" tree_invisible="1"/>
       <button name="conform" string="Conform" tree_invisible="1"/>
