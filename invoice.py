@@ -3,33 +3,31 @@
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval, Bool, Not, Equal
+from trytond import backend
+from trytond.transaction import Transaction
+from sql.conditionals import Case
 
 __all__ = ['Configuration', 'ConformGroupUser', 'ConformGroup', 'Invoice']
-__metaclass__ = PoolMeta
 
 CONFORMITY_STATE = [
     (None, ''),
     ('pending', 'Pending'),
-    ('closed', 'Closed'),
-    ]
-
-CONFORMITY_RESULT = [
-    (None, ''),
-    ('conformed', 'Conformed'),
-    ('disconformed', 'Disconformed'),
+    ('conforming', 'Conforming'),
+    ('nonconforming_pending', 'Nonconforming Pending'),
+    ('nonconforming', 'Nonconforming'),
     ]
 
 
 class Configuration:
+    __metaclass__ = PoolMeta
     __name__ = 'account.configuration'
     ensure_conformity = fields.Boolean('Ensure Conformity', help='If marked '
-        'posted supplier invoices must be conformed before posting them.')
+        'posted supplier invoices must be conforming before posting them.')
 
 
 class ConformGroupUser(ModelSQL):
     'Conform Group - Users'
     __name__ = 'account.invoice.conform_group-res.user'
-
     group = fields.Many2One('account.invoice.conform_group', 'Group',
         required=True, select=True)
     user = fields.Many2One('res.user', 'User', required=True, select=True)
@@ -38,98 +36,161 @@ class ConformGroupUser(ModelSQL):
 class ConformGroup(ModelSQL, ModelView):
     'Conform Group'
     __name__ = 'account.invoice.conform_group'
-
     name = fields.Char('Name', required=True)
     users = fields.Many2Many('account.invoice.conform_group-res.user',
         'group', 'user', 'Users')
 
 
 class Invoice:
+    __metaclass__ = PoolMeta
     __name__ = 'account.invoice'
-
     conform_by = fields.Many2One('account.invoice.conform_group',
         'Conform by',
         states={
-            'required': Bool(Eval('conformity_result')),
+            'required': Bool(Eval('conformity_state')),
             })
     conformity_state = fields.Selection(CONFORMITY_STATE, 'Conformity State',
         states={
             'invisible': Not(Equal(Eval('type'), 'in')),
             },
-        depends=['type'])
-    conformity_result = fields.Selection(CONFORMITY_RESULT,
-        'Conformity Result',
-        states={
-            'required': Eval('conformity_state') == 'closed',
-            })
-    pending_to_resolve_conformity = fields.Boolean(
-        'Pending to resolve conformity',
-        states={
-            'invisible': ~((Eval('conformity_state', '') == 'closed') &
-                (Eval('conformity_result', '') == 'disconformed'))
-            },
-        depends=['conformity_state', 'conformity_result'])
-    disconformity_culprit = fields.Selection([
+        depends=['type'], sort=False)
+    nonconformity_culprit = fields.Selection([
             (None, ''),
             ('supplier', 'Supplier'),
             ('company', 'Company'),
-            ], 'Disconformity Culprit',
+            ], 'Nonconformity Culprit',
         states={
-            'required': ((Eval('conformity_result') == 'disconformed') &
+            'required': ((Eval('conformity_state') == 'nonconforming') &
                 (Eval('conformity_state', '') == 'closed'))
             })
-    conformed_description = fields.Text('Conformed Description')
+    conforming_description = fields.Text('Conforming Description')
 
     @classmethod
     def __setup__(cls):
         super(Invoice, cls).__setup__()
         cls._error_messages.update({
-                'post_conformed': ('Invoice "%s" can not be posted because it '
-                    'is not conformed.'),
+                'post_conforming': ('Invoice "%s" can not be posted because it '
+                    'is pending to conformed.'),
                 })
         cls._check_modify_exclude += ['conform_by', 'conformity_state',
-            'conformity_result', 'disconformity_culprit',
-            'conformed_description', 'pending_to_resolve_conformity']
+            'nonconformity_culprit', 'conforming_description']
+        cls._buttons.update({
+            'conform' : {
+                'invisible' : Eval('conformity_state') != 'pending',
+                }
+            })
 
-    @staticmethod
-    def default_conformity_result():
-        return None
+    @classmethod
+    def __register__(cls, module_name):
+        TableHandler = backend.get('TableHandler')
+        cursor = Transaction().connection.cursor()
+        sql_table = cls.__table__()
+        table = TableHandler(cls, module_name)
+
+        # Migration from 4.0: rename conformity_result into conformity_state
+        if table.column_exist('conformity_result'):
+            cursor.execute(*sql_table.update(
+                    columns=[sql_table.conformity_state],
+                    values = [
+                        Case(((sql_table.conformity_state == 'closed')
+                              & (sql_table.conformity_result == 'conforming'),
+                                'conforming'),
+                            ((sql_table.conformity_state == 'closed')
+                             & (sql_table.conformity_result == 'nonconforming'),
+                                'nonconforming'),
+                            ((sql_table.conformity_state == 'pending')
+                             & (sql_table.conformity_result == 'nonconforming'),
+                                'nonconforming_pending'),
+                            else_='pending')
+                    ]
+                )
+            )
+            table.drop_column('conformity_result')
+        # Migration from 4.0: rename conformed_description into conforming_description
+        if (table.column_exist('conformed_description')
+                and not table.column_exist('conforming_description')):
+            table.column_rename('conformed_description', 'conforming_description')
+        # Migration from 4.0: rename disconformity_culprit into nonconformity_culprit
+        if (table.column_exist('disconformity_culprit')
+                and not table.column_exist('nonconformity_culprit')):
+            table.column_rename('disconformity_culprit', 'nonconformity_culprit')
+
+        super(Invoice, cls).__register__(module_name)
 
     @staticmethod
     def default_conformity_state():
-        return None
+        Company = Pool().get('company.company')
+        company_id = Transaction().context.get('company')
+        company, = Company.search([('id', '=', company_id), ])
+        if company.default_conformity_state:
+            return company.default_conformity_state
+        else:
+            return None
 
-    def to_conform(self):
-        if self.type != 'in':
-            return False
-        InvoiceLine = Pool().get('account.invoice.line')
-        lines = InvoiceLine.search([('origin', '=', None),
-            ('invoice', '=', self.id)])
-        if not lines:
+    @staticmethod
+    def default_conform_by():
+        ConformGroup = Pool().get('account.invoice.conform_group')
+        conform_groups = ConformGroup.search([()])
+        if conform_groups:
+            return conform_groups[0].id
+        else:
+            return None
+
+    @fields.depends('conform_by')
+    def on_change_conformity_state(self):
+        self.conform_by = self.default_conform_by()
+
+    def to_conforming(self):
+        Config = Pool().get('account.configuration')
+        config = Config(1)
+
+        if ((not config.ensure_conformity)
+                or (self.type != 'in')
+                or (self.conformity_state is not None)):
             return False
         return True
 
-    def set_conformity(self):
-        if self.conformity_state != None and self.conformity_result != None:
+    def to_pending(self):
+        Config = Pool().get('account.configuration')
+        config = Config(1)
+
+        if ((not config.ensure_conformity)
+                or (self.type != 'in')
+                or (self.conformity_state is None)):
+            return False
+        return True
+
+    def check_conformity(self):
+        Config = Pool().get('account.configuration')
+
+        config = Config(1)
+        if (not config.ensure_conformity or (self.type != 'in')):
             return
-        if self.to_conform():
-            self.conformity_state = 'pending'
-            self.conformity_result = None
-        self.save()
+
+        if self.conformity_state != 'conforming':
+            self.raise_user_error('post_conforming', self.rec_name)
+
+    def get_rec_name(self, name):
+        res = super(Invoice, self).get_rec_name(name)
+        if self.conformity_state == 'pending':
+            return ' P*** ' + res
+        if self.conformity_state == 'nonconforming_pending':
+            return ' NCP*** ' + res
+        return res
 
     @classmethod
     def draft(cls, invoices):
         super(Invoice, cls).draft(invoices)
-        cls.write(invoices, {
-                'conformity_state': 'pending',
-                'conformity_result': None,
-                })
 
-    @classmethod
-    def validate_invoice(cls, invoices):
-        super(Invoice, cls).validate_invoice(invoices)
+        to_pending = []
         for invoice in invoices:
-            invoice.set_conformity()
+            if invoice.to_pending():
+                to_pending.append(invoice)
+
+        if to_pending:
+            cls.write(to_pending, {
+                    'conformity_state': 'pending',
+                    })
 
     @classmethod
     def post(cls, invoices):
@@ -137,16 +198,41 @@ class Invoice:
             invoice.check_conformity()
         super(Invoice, cls).post(invoices)
 
-    def check_conformity(self):
-        pool = Pool()
-        config = pool.get('account.configuration').get_singleton()
-        if not config or not config.ensure_conformity:
-            return
-        if self.to_conform() and not self.conformity_state:
-            self.raise_user_error('post_conformed', self.rec_name)
+    @classmethod
+    @ModelView.button
+    def conform(cls, invoices):
+        cls.write(invoices, {
+            'conformity_state': 'conforming',
+            })
 
-    def get_rec_name(self, name):
-        res = super(Invoice, self).get_rec_name(name)
-        if self.conformity_state == 'pending':
-            res = '***' + res
-        return res
+    @classmethod
+    def view_attributes(cls):
+        return super(Invoice, cls).view_attributes() + [
+            ('//page[@id="conform"]', 'states', {
+                    'invisible': (Eval('type') != 'in'),
+                    })]
+
+    @classmethod
+    def copy(cls, invoices, default=None):
+        invoices_w_cs = []
+        invoices_wo_cs = []
+
+        for invoice in invoices:
+            if invoice.conformity_state:
+                invoices_w_cs.append(invoice)
+            else:
+                invoices_wo_cs.append(invoice)
+        new_records = []
+        if default:
+            new_default = default.copy()
+        else:
+            new_default = {}
+        if invoices_wo_cs:
+            new_records += super(Invoice, cls).copy(invoices_wo_cs,
+                default=new_default)
+        if invoices_w_cs:
+            new_default['conformity_state'] = 'pending'
+            new_records += super(Invoice, cls).copy(invoices_w_cs,
+                default=new_default)
+
+        return new_records

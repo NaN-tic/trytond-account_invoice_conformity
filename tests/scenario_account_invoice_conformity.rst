@@ -8,26 +8,18 @@ Imports::
     >>> from decimal import Decimal
     >>> from operator import attrgetter
     >>> from proteus import config, Model, Wizard
+    >>> from trytond.tests.tools import activate_modules
     >>> from trytond.modules.company.tests.tools import create_company, \
     ...     get_company
     >>> from trytond.modules.account.tests.tools import create_fiscalyear, \
-    ...     create_chart, get_accounts, create_tax, set_tax_code
+    ...     create_chart, get_accounts, create_tax, create_tax_code
     >>> from trytond.modules.account_invoice.tests.tools import \
-    ...     set_fiscalyear_invoice_sequences, create_payment_term
+    ...     set_fiscalyear_invoice_sequences
     >>> today = datetime.date.today()
-
-Create database::
-
-    >>> config = config.set_trytond()
-    >>> config.pool.test = True
 
 Install account_invoice_conformity::
 
-    >>> Module = Model.get('ir.module')
-    >>> account_invoice_module, = Module.find(
-    ...     [('name', '=', 'account_invoice_conformity')])
-    >>> Module.install([account_invoice_module.id], config.context)
-    >>> Wizard('ir.module.install_upgrade').execute('upgrade')
+    >>> config = activate_modules('account_invoice_conformity')
 
 Create company::
 
@@ -37,14 +29,45 @@ Create company::
 Reload the context::
 
     >>> User = Model.get('res.user')
+    >>> Group = Model.get('res.group')
     >>> config._context = User.get_preferences(True, config.context)
+    >>> admin_user, = User.find(('login', '=', 'admin'))
+
+Create account user::
+
+    >>> account_user = User()
+    >>> account_user.name = 'Account'
+    >>> account_user.login = 'account'
+    >>> account_user.main_company = company
+    >>> account_group, = Group.find([('name', '=', 'Account')])
+    >>> account_user.groups.append(account_group)
+    >>> account_user.save()
+
+Create account admin user::
+
+    >>> account_user_admin = User()
+    >>> account_user_admin.name = 'Account Admin'
+    >>> account_user_admin.login = 'account_admin'
+    >>> account_user_admin.main_company = company
+    >>> account_admin_group, = Group.find([('name', '=', 'Account Administration')])
+    >>> account_user_admin.groups.append(account_admin_group)
+    >>> account_user_admin.save()
+
+Create conformity user::
+
+    >>> conform_user = User()
+    >>> conform_user.name = 'Conformity'
+    >>> conform_user.login = 'conformity'
+    >>> conform_user.main_company = company
+    >>> conform_group, = Group.find([('name', '=', 'Conform')])
+    >>> conform_user.groups.append(conform_group)
+    >>> conform_user.save()
 
 Create fiscal year::
 
     >>> fiscalyear = set_fiscalyear_invoice_sequences(
     ...     create_fiscalyear(company))
     >>> fiscalyear.click('create_period')
-    >>> period = fiscalyear.periods[0]
 
 Configure account::
 
@@ -65,12 +88,8 @@ Create chart of accounts::
 
 Create tax::
 
-    >>> tax = set_tax_code(create_tax(Decimal('.10')))
+    >>> tax = create_tax(Decimal('.10'))
     >>> tax.save()
-    >>> invoice_base_code = tax.invoice_base_code
-    >>> invoice_tax_code = tax.invoice_tax_code
-    >>> credit_note_base_code = tax.credit_note_base_code
-    >>> credit_note_tax_code = tax.credit_note_tax_code
 
 Create party::
 
@@ -107,8 +126,19 @@ Create payment term::
     >>> payment_term.lines.append(payment_term_line)
     >>> payment_term.save()
 
-Create in invoice::
+Create a conform group::
 
+
+    >>> config.user = account_user_admin.id
+    >>> ConformGroup = Model.get('account.invoice.conform_group')
+    >>> conform_group = ConformGroup()
+    >>> conform_group.name = 'Account Conform Group'
+    >>> conform_group.users.append(conform_user)
+    >>> conform_group.save()
+
+Create an invoice::
+
+    >>> config.user = account_user.id
     >>> Invoice = Model.get('account.invoice')
     >>> InvoiceLine = Model.get('account.invoice.line')
     >>> invoice = Invoice()
@@ -122,21 +152,30 @@ Create in invoice::
     >>> line.quantity = 5
     >>> line.unit_price = Decimal('20')
     >>> invoice.save()
-    >>> Invoice.post([invoice.id], config.context)
+    >>> Invoice.post([invoice.id], config.context)   # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
-        ...
-    UserError: ('UserError', (u'Invoice "1 Party" can not be posted because it is not conformed.', ''))
-    >>> invoice.conformity_state = 'pending'
+    ...
+    UserError: ('UserError', (u'Invoice "1 Party" can not be posted because it is pending to conformed.', ''))
+    >>> invoice.conform_by = conform_group
     >>> invoice.save()
+    >>> Invoice.conform([invoice.id], config.context)
     >>> Invoice.post([invoice.id], config.context)
     >>> invoice.reload()
-    >>> invoice.state
-    u'posted'
-    >>> invoice.rec_name
-    u'***1 Party'
+    >>> invoice.state == 'posted'
+    True
+    >>> invoice.conformity_state == 'conforming'
+    True
+
+Ensure the conform user can change conformity state::
+
+    >>> config.user = conform_user.id
+    >>> invoice.conformity_state = ''
+    >>> invoice.conformity_state == ''
+    True
 
 Create out invoice::
 
+    >>> config.user = account_user.id
     >>> invoice = Invoice()
     >>> invoice.party = party
     >>> invoice.payment_term = payment_term
@@ -153,8 +192,10 @@ Create out invoice::
 
 Disable configuration and check error doesn't raise::
 
+    >>> config.user = admin_user.id
     >>> account_config.ensure_conformity = False
     >>> account_config.save()
+
     >>> invoice = Invoice()
     >>> invoice.type = 'in'
     >>> invoice.party = party
