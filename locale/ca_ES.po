@@ -7,6 +7,10 @@ msgid "Invoice \"%s\" can not be posted because it is pending to conformed."
 msgstr ""
 "La factura \"%s\" no es pot comptabilitzar perquè està pendent de conformar"
 
+msgctxt "field:account.configuration,default_conformity_state:"
+msgid "Default Conformity State"
+msgstr "Estat de la conformitat per defecte"
+
 msgctxt "field:account.configuration,ensure_conformity:"
 msgid "Ensure Conformity"
 msgstr "Validar conformitat"
@@ -91,9 +95,13 @@ msgctxt "field:account.invoice.conform_group-res.user,write_uid:"
 msgid "Write User"
 msgstr "Usuari modificació"
 
-msgctxt "field:company.company,default_conformity_state:"
-msgid "Default Conformity State"
-msgstr "Estat de la conformitat per defecte"
+msgctxt "field:res.user,conform_groups:"
+msgid "Conform Groups IDs"
+msgstr "Identificadors de grups de conformitat"
+
+msgctxt "field:res.user,user_conform_groups:"
+msgid "Conform Groups"
+msgstr "Grups de conformitat"
 
 msgctxt "help:account.configuration,ensure_conformity:"
 msgid ""
@@ -117,6 +125,10 @@ msgstr "Factures de abonament a conformar"
 msgctxt "model:ir.action,name:act_conform_group_form"
 msgid "Conform Group"
 msgstr "Grup de conformitats"
+
+msgctxt "model:ir.action,name:act_conform_group_user_form"
+msgid "Conform Group User"
+msgstr "Usuari de grup de conformitat"
 
 msgctxt "model:ir.action,name:act_invoice_conform_invoice_form"
 msgid "Invoices to Conform"
@@ -162,10 +174,21 @@ msgctxt "model:res.group,name:group_conform"
 msgid "Conform"
 msgstr "Conformitat"
 
-#, fuzzy
-msgctxt "selection:account.invoice,conformity_state:"
-msgid ""
-msgstr " "
+msgctxt "selection:account.configuration,default_conformity_state:"
+msgid "Conforming"
+msgstr "Conforme"
+
+msgctxt "selection:account.configuration,default_conformity_state:"
+msgid "Nonconforming"
+msgstr "No conforme"
+
+msgctxt "selection:account.configuration,default_conformity_state:"
+msgid "Nonconforming Pending"
+msgstr "No conforme pendent"
+
+msgctxt "selection:account.configuration,default_conformity_state:"
+msgid "Pending"
+msgstr "Pendent"
 
 msgctxt "selection:account.invoice,conformity_state:"
 msgid "Conforming"
@@ -182,11 +205,6 @@ msgstr "No conforme pendent"
 msgctxt "selection:account.invoice,conformity_state:"
 msgid "Pending"
 msgstr "Pendent"
-
-#, fuzzy
-msgctxt "selection:account.invoice,nonconformity_culprit:"
-msgid ""
-msgstr " "
 
 msgctxt "selection:account.invoice,nonconformity_culprit:"
 msgid "Company"
@@ -196,26 +214,9 @@ msgctxt "selection:account.invoice,nonconformity_culprit:"
 msgid "Supplier"
 msgstr "Proveïdor"
 
-#, fuzzy
-msgctxt "selection:company.company,default_conformity_state:"
-msgid ""
-msgstr " "
-
-msgctxt "selection:company.company,default_conformity_state:"
-msgid "Conforming"
-msgstr "Conforme"
-
-msgctxt "selection:company.company,default_conformity_state:"
-msgid "Nonconforming"
-msgstr "No conforme"
-
-msgctxt "selection:company.company,default_conformity_state:"
-msgid "Nonconforming Pending"
-msgstr "No conforme pendent"
-
-msgctxt "selection:company.company,default_conformity_state:"
-msgid "Pending"
-msgstr "Pendent"
+msgctxt "view:account.invoice.conform_group-res.user:"
+msgid "Conform Group User"
+msgstr "Usuari de grup de conformitat"
 
 msgctxt "view:account.invoice.conform_group:"
 msgid "Conform Group"
@@ -224,3 +225,7 @@ msgstr "Grup de conformitats"
 msgctxt "view:account.invoice:"
 msgid "Conform"
 msgstr "Conformitat"
+
+msgctxt "view:res.user:"
+msgid "Invoice Conform Groups"
+msgstr "Grups de conformitat de factures"
