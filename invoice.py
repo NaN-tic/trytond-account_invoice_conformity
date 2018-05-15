@@ -220,7 +220,8 @@ class Invoice:
             new_records += super(Invoice, cls).copy(invoices_wo_cs,
                 default=new_default)
         if invoices_w_cs:
-            new_default['conformity_state'] = 'pending'
+            new_default['conformity_state'] = cls.default_conformity_state()
+            new_default['conform_by'] = cls.default_conform_by()
             new_records += super(Invoice, cls).copy(invoices_w_cs,
                 default=new_default)
 
