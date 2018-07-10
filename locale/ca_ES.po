@@ -223,8 +223,8 @@ msgid "Conform Group"
 msgstr "Grup de conformitats"
 
 msgctxt "view:account.invoice:"
-msgid "Conform"
-msgstr "Conformitat"
+msgid "Review Conformity"
+msgstr "Revisió Conformitat"
 
 msgctxt "view:res.user:"
 msgid "Invoice Conform Groups"
