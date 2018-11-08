@@ -13,5 +13,10 @@ def register():
         invoice.ConformGroup,
         invoice.ConformGroupUser,
         invoice.Invoice,
+        invoice.InvoiceNonconformStart,
         user.User,
         module='account_invoice_conformity', type_='model')
+    Pool.register(
+        invoice.InvoiceNonconform,
+        invoice.InvoiceConform,
+        module='account_invoice_conformity', type_='wizard')
