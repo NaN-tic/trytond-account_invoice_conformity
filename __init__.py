@@ -1,14 +1,21 @@
 #The COPYRIGHT file at the top level of this repository contains the full
 #copyright notices and license terms.
-
 from trytond.pool import Pool
-from .invoice import *
+from . import configuration
+from . import invoice
+from . import user
 
 
 def register():
     Pool.register(
-        Configuration,
-        ConformGroup,
-        ConformGroupUser,
-        Invoice,
+        configuration.Configuration,
+        invoice.ConformGroup,
+        invoice.ConformGroupUser,
+        invoice.Invoice,
+        invoice.InvoiceNonconformStart,
+        user.User,
         module='account_invoice_conformity', type_='model')
+    Pool.register(
+        invoice.InvoiceNonconform,
+        invoice.InvoiceConform,
+        module='account_invoice_conformity', type_='wizard')

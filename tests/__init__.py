@@ -2,3 +2,5 @@
 # copyright notices and license terms.
 
 from .test_account_invoice_conformity import suite
+
+__all__ = ['suite']

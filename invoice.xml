@@ -1,10 +1,19 @@
+<?xml version="1.0"?>
 <tryton>
     <data>
-        <record model="ir.ui.view" id="configuration_view_form">
-            <field name="model">account.configuration</field>
-            <field name="inherit" ref="account.configuration_view_form"/>
-            <field name="name">configuration_form</field>
+        <record model="res.group" id="group_conform">
+            <field name="name">Conform</field>
         </record>
+        <record model="res.user-res.group" id="user_admin_group_conform">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_conform"/>
+        </record>
+        <record model="res.user-res.group" id="user_trigger_group_conform">
+            <field name="user" ref="res.user_trigger"/>
+            <field name="group" ref="group_conform"/>
+        </record>
+
+        <!-- conform group -->
         <record model="ir.ui.view" id="conform_group_view_form">
             <field name="model">account.invoice.conform_group</field>
             <field name="type">form</field>
@@ -15,7 +24,6 @@
             <field name="type">tree</field>
             <field name="name">conform_group_tree</field>
         </record>
-
         <record model="ir.action.act_window" id="act_conform_group_form">
             <field name="name">Conform Group</field>
             <field name="res_model">account.invoice.conform_group</field>
@@ -30,51 +38,34 @@
             <field name="view" ref="conform_group_view_form"/>
             <field name="act_window" ref="act_conform_group_form"/>
         </record>
-
-        <record model="ir.model.access" id="access_conform_group">
-            <field name="model"
-                search="[('model', '=', 'account.invoice.conform_group')]"/>
-            <field name="perm_read" eval="False"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_delete" eval="False"/>
-        </record>
-        <record model="ir.model.access" id="access_conform_group_admin">
-            <field name="model"
-                search="[('model', '=', 'account.invoice.conform_group')]"/>
-            <field name="group" ref="account.group_account_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_delete" eval="True"/>
-        </record>
-
+        <!--  -->
         <menuitem id="menu_counform_group" name="Conform Groups"
                 parent="account.menu_account_configuration"
                 action="act_conform_group_form" sequence="50"/>
 
-
+        <!-- account invoice -->
         <record model="ir.ui.view" id="invoice_view_form">
             <field name="model">account.invoice</field>
-            <field name="type">form</field>
+            <field name="type" eval="None"/>
             <field name="inherit" ref="account_invoice.invoice_view_form"/>
             <field name="name">invoice_form</field>
-            <field name="domain"></field>
+            <field name="domain">context.get('type') in ('in_invoice', 'in_credit_note')</field>
         </record>
         <record model="ir.ui.view" id="invoice_view_tree">
             <field name="model">account.invoice</field>
-            <field name="type">tree</field>
+            <field name="type" eval="None"/>
             <field name="inherit" ref="account_invoice.invoice_view_tree"/>
             <field name="name">invoice_tree</field>
             <field name="domain">context.get('type') in ('in_invoice', 'in_credit_note')</field>
         </record>
 
-
+        <!-- invoices to conform -->
         <record model="ir.action.act_window" id="act_invoice_conform_invoice_form">
             <field name="name">Invoices to Conform</field>
             <field name="res_model">account.invoice</field>
-            <field name="domain">[('type', '=', 'in_invoice'), ('conformity_state', '!=', None), ('conform_by.users', '=', Eval('context', {}).get('_user', 0))]</field>
-            <field name="context">{'type': 'in_invoice'}</field>
+            <field name="domain">[('type', '=', 'in_invoice'), ('conformity_state', '!=', None),
+              ('conform_by.users', '=', Eval('context', {}).get('_user', 0))]</field>
+           <field name="context">{'type': 'in_invoice'}</field>
         </record>
         <record model="ir.action.act_window.view"
                  id="act_invoice_conform_invoice_form_view1">
@@ -97,92 +88,161 @@
         </record>
         <record model="ir.action.act_window.domain"
                  id="act_invoice_conform_invoice_domain_conformed">
-            <field name="name">Conformed</field>
+            <field name="name">Conforming</field>
             <field name="sequence" eval="20"/>
-            <field name="domain">[('conformity_result', '=', 'conformed')]</field>
+            <field name="domain">[('conformity_state', '=', 'conforming')]</field>
             <field name="act_window" ref="act_invoice_conform_invoice_form"/>
         </record>
         <record model="ir.action.act_window.domain"
                  id="act_invoice_conform_invoice_domain_pending">
-            <field name="name">Pending to resolve</field>
+            <field name="name">Nonconforming Pending</field>
             <field name="sequence" eval="30"/>
-            <field name="domain">[('pending_to_resolve_conformity', '=', True)]</field>
+            <field name="domain">[('conformity_state', '=', 'nonconforming_pending')]</field>
             <field name="act_window" ref="act_invoice_conform_invoice_form"/>
         </record>
         <record model="ir.action.act_window.domain"
                  id="act_invoice_conform_invoice_domain_disconformed">
-            <field name="name">Disconformed</field>
+            <field name="name">Nonconforming</field>
             <field name="sequence" eval="40"/>
-            <field name="domain">[('conformity_result', '=', 'disconformed')]</field>
+            <field name="domain">[('conformity_state', '=', 'nonconforming')]</field>
             <field name="act_window" ref="act_invoice_conform_invoice_form"/>
         </record>
 
-        <menuitem parent="account_invoice.menu_invoice_in_invoice_form" action="act_invoice_conform_invoice_form"
-            id="menu_invoice_conform_invoice_form" sequence="1"/>
+        <menuitem name="Conform Invoices"
+            action="act_invoice_conform_invoice_form"
+            id="menu_invoice_conform_invoice" sequence="1"
+            icon="tryton-list"/>
 
         <record model="ir.ui.menu-res.group"
             id="menu_invoice_conform_invoice_form_admin_group">
-            <field name="menu" ref="menu_invoice_conform_invoice_form"/>
+            <field name="menu" ref="menu_invoice_conform_invoice"/>
+            <field name="group" ref="group_conform"/>
+        </record>
+
+        <!-- access -->
+        <record model="ir.model.access" id="access_conform_group_res_user">
+            <field name="model"
+                search="[('model', '=', 'account.invoice.conform_group-res.user')]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_conform_group_res_user_account">
+            <field name="model"
+                   search="[('model', '=', 'account.invoice.conform_group-res.user')]"/>
+            <field name="group" ref="account.group_account"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_conform_group_res_user_account_admin">
+            <field name="model"
+                search="[('model', '=', 'account.invoice.conform_group-res.user')]"/>
             <field name="group" ref="account.group_account_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
-
-        <record model="ir.action.act_window"
-                 id="act_invoice_conform_credit_note_form">
-            <field name="name">Credit Notes to Conform</field>
-            <field name="res_model">account.invoice</field>
-            <field name="domain">[('type', '=', 'in_credit_note'), ('conformity_state', '!=', None), ('conform_by.users', '=', Eval('context', {}).get('_user', 0))]</field>
-            <field name="context">{'type': 'in_credit_note'}</field>
+        <record model="ir.model.access" id="access_conform_group">
+            <field name="model"
+                search="[('model', '=', 'account.invoice.conform_group')]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
         </record>
-        <record model="ir.action.act_window.view"
-                 id="act_invoice_conform_credit_note_form_view1">
-            <field name="sequence" eval="10"/>
-            <field name="view" ref="invoice_view_tree"/>
-            <field name="act_window" ref="act_invoice_conform_credit_note_form"/>
+        <record model="ir.model.access" id="access_conform_group_account">
+            <field name="model"
+                   search="[('model', '=', 'account.invoice.conform_group')]"/>
+            <field name="group" ref="account.group_account"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
         </record>
-        <record model="ir.action.act_window.view"
-                 id="act_invoice_conform_credit_note_form_view2">
-            <field name="sequence" eval="20"/>
-            <field name="view" ref="invoice_view_form"/>
-            <field name="act_window" ref="act_invoice_conform_credit_note_form"/>
-        </record>
-        <record model="ir.action.act_window.domain"
-                 id="act_invoice_conform_credit_note_domain_toconform">
-            <field name="name">To Conform</field>
-            <field name="sequence" eval="10"/>
-            <field name="domain">[('conformity_state', '=', 'pending')]</field>
-            <field name="act_window" ref="act_invoice_conform_credit_note_form"/>
-        </record>
-        <record model="ir.action.act_window.domain"
-                 id="act_invoice_conform_credit_note_domain_conformed">
-            <field name="name">Conformed</field>
-            <field name="sequence" eval="20"/>
-            <field name="domain">[('conformity_result', '=', 'conformed')]</field>
-            <field name="act_window" ref="act_invoice_conform_credit_note_form"/>
-        </record>
-        <record model="ir.action.act_window.domain"
-                 id="act_invoice_conform_credit_note_domain_pending">
-            <field name="name">Pending to resolve</field>
-            <field name="sequence" eval="30"/>
-            <field name="domain">[('pending_to_resolve_conformity', '=', True)]</field>
-            <field name="act_window" ref="act_invoice_conform_credit_note_form"/>
-        </record>
-        <record model="ir.action.act_window.domain"
-                 id="act_invoice_conform_credit_note_domain_disconformed">
-            <field name="name">Disconformed</field>
-            <field name="sequence" eval="40"/>
-            <field name="domain">[('conformity_result', '=', 'disconformed')]</field>
-            <field name="act_window" ref="act_invoice_conform_credit_note_form"/>
-        </record>
-
-        <menuitem parent="account_invoice.menu_invoice_in_credit_note_form"
-            action="act_invoice_conform_credit_note_form"
-            id="menu_invoice_conform_credit_note_form" sequence="1"/>
-
-        <record model="ir.ui.menu-res.group"
-            id="menu_invoice_conform_credit_note_form_admin_group">
-            <field name="menu" ref="menu_invoice_conform_credit_note_form"/>
+        <record model="ir.model.access" id="access_conform_group_account_admin">
+            <field name="model"
+                search="[('model', '=', 'account.invoice.conform_group')]"/>
             <field name="group" ref="account.group_account_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.access" id="access_account_invoice_conform">
+            <field name="model"
+                search="[('model', '=', 'account.invoice')]"/>
+            <field name="group" ref="group_conform"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.field.access" id="conform_conformity_state_group_conform">
+            <field name="field"
+                search="[('model.model', '=', 'account.invoice'),
+                  ('name', '=', 'conformity_state')]"/>
+            <field name="group" ref="group_conform"/>
+	        <field name="perm_read" eval="True"/>
+	        <field name="perm_write" eval="True"/>
+	        <field name="perm_create" eval="True"/>
+	        <field name="perm_delete" eval="True"/>
+        </record>
+        <record model="ir.model.access" id="access_invoice_line_conform_group">
+            <field name="model"
+                  search="[('model', '=', 'account.invoice.line')]"/>
+            <field name="group" ref="group_conform"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_conformity_group_conform_group">
+            <field name="model"
+                   search="[('model', '=', 'account.invoice.conform_group')]"/>
+            <field name="group" ref="group_conform"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
         </record>
 
+        <!-- Invoice Conformity Wizards -->
+        <record model="ir.ui.view" id="account_invoice_nonconformity_start_view_form">
+            <field name="model">account.invoice.nonconformity.start</field>
+            <field name="type">form</field>
+            <field name="name">account_invoice_nonconform_start_form</field>
+        </record>
+        <record model="ir.action.wizard" id="act_account_nonconform_invoices">
+            <field name="name">Nonconform Invoices</field>
+            <field name="wiz_name">account.invoice.nonconformity</field>
+        </record>
+        <record model="ir.action.keyword" id="act_account_nonconform_invoices2">
+            <field name="keyword">form_action</field>
+            <field name="model">account.invoice,-1</field>
+            <field name="action" ref="act_account_nonconform_invoices"/>
+        </record>
+        <record model="ir.action-res.group"
+                id="nonconform_invoices_action_group">
+            <field name="action" ref="act_account_nonconform_invoices"/>
+            <field name="group" ref="group_conform"/>
+        </record>
+        <record model="ir.action.wizard" id="act_account_conform_invoices">
+            <field name="name">Conform Invoices</field>
+            <field name="wiz_name">account.invoice.conformity</field>
+        </record>
+        <record model="ir.action.keyword" id="act_account_conform_invoices2">
+            <field name="keyword">form_action</field>
+            <field name="model">account.invoice,-1</field>
+            <field name="action" ref="act_account_conform_invoices"/>
+        </record>
+        <record model="ir.action-res.group"
+                id="conform_invoices_action_group">
+            <field name="action" ref="act_account_conform_invoices"/>
+            <field name="group" ref="group_conform"/>
+        </record>
     </data>
 </tryton>
