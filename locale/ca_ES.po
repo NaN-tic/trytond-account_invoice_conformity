@@ -5,11 +5,12 @@ msgstr "Content-Type: text/plain; charset=utf-8\n"
 msgctxt "error:account.invoice:"
 msgid "Invoice \"%s\" can not be posted because it is pending to conformed."
 msgstr ""
-"La factura \"%s\" no es pot comptabilitzar perquè està pendent de conformar"
+"La factura \"% s\" no es pot comptabilitzar perquè està pendent de ser "
+"conformada."
 
 msgctxt "field:account.configuration,default_conformity_state:"
 msgid "Default Conformity State"
-msgstr "Estat de la conformitat per defecte"
+msgstr "Estat de conformitat per defecte"
 
 msgctxt "field:account.configuration,ensure_conformity:"
 msgid "Ensure Conformity"
@@ -41,7 +42,7 @@ msgstr "Usuari de creació"
 
 msgctxt "field:account.invoice.conform_group,id:"
 msgid "ID"
-msgstr "Identificador"
+msgstr "ID"
 
 msgctxt "field:account.invoice.conform_group,name:"
 msgid "Name"
@@ -77,7 +78,7 @@ msgstr "Grup"
 
 msgctxt "field:account.invoice.conform_group-res.user,id:"
 msgid "ID"
-msgstr "Identificador"
+msgstr "ID"
 
 msgctxt "field:account.invoice.conform_group-res.user,rec_name:"
 msgid "Name"
@@ -94,6 +95,22 @@ msgstr "Data modificació"
 msgctxt "field:account.invoice.conform_group-res.user,write_uid:"
 msgid "Write User"
 msgstr "Usuari modificació"
+
+msgctxt "field:account.invoice.nonconformity.start,conforming_description:"
+msgid "Conforming Description"
+msgstr "Descripció de la conformitat"
+
+msgctxt "field:account.invoice.nonconformity.start,conformity_state:"
+msgid "Conformity State"
+msgstr "Estat de la conformitat"
+
+msgctxt "field:account.invoice.nonconformity.start,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:account.invoice.nonconformity.start,nonconformity_culprit:"
+msgid "Nonconformity Culprit"
+msgstr "Culpable de la no conformitat"
 
 msgctxt "field:res.user,conform_groups:"
 msgid "Conform Groups IDs"
@@ -118,9 +135,21 @@ msgctxt "model:account.invoice.conform_group-res.user,name:"
 msgid "Conform Group - Users"
 msgstr "Grup de conformitats - Usuari"
 
+msgctxt "model:account.invoice.nonconformity.start,name:"
+msgid "Nonconform Invoices"
+msgstr "Factures no conforme"
+
 msgctxt "model:ir.action,name:"
 msgid "Credit Notes to Conform"
-msgstr "Factures de abonament a conformar"
+msgstr "Factures d'abonament per conformar"
+
+msgctxt "model:ir.action,name:act_account_conform_invoices"
+msgid "Conform Invoices"
+msgstr "Conformar"
+
+msgctxt "model:ir.action,name:act_account_nonconform_invoices"
+msgid "Nonconform Invoices"
+msgstr "Factures no conforme"
 
 msgctxt "model:ir.action,name:act_conform_group_form"
 msgid "Conform Group"
@@ -132,7 +161,7 @@ msgstr "Usuari de grup de conformitat"
 
 msgctxt "model:ir.action,name:act_invoice_conform_invoice_form"
 msgid "Invoices to Conform"
-msgstr "Factures a conformar"
+msgstr "Factures per conformar"
 
 msgctxt "model:ir.action.act_window.domain,name:"
 msgid "Conformed"
@@ -160,19 +189,19 @@ msgstr "Per conformar"
 
 msgctxt "model:ir.ui.menu,name:"
 msgid "Credit Notes to Conform"
-msgstr "Factures de abonament a conformar"
+msgstr "Factures d'abonament per conformar"
 
 msgctxt "model:ir.ui.menu,name:menu_counform_group"
 msgid "Conform Groups"
 msgstr "Grups de conformitats"
 
-msgctxt "model:ir.ui.menu,name:menu_invoice_conform_invoice_form"
-msgid "Invoices to Conform"
+msgctxt "model:ir.ui.menu,name:menu_invoice_conform_invoice"
+msgid "Conform Invoices"
 msgstr "Factures a conformar"
 
 msgctxt "model:res.group,name:group_conform"
 msgid "Conform"
-msgstr "Conformitat"
+msgstr "Conformar"
 
 msgctxt "selection:account.configuration,default_conformity_state:"
 msgid "Conforming"
@@ -214,6 +243,22 @@ msgctxt "selection:account.invoice,nonconformity_culprit:"
 msgid "Supplier"
 msgstr "Proveïdor"
 
+msgctxt "selection:account.invoice.nonconformity.start,conformity_state:"
+msgid "Nonconforming"
+msgstr "No conforme"
+
+msgctxt "selection:account.invoice.nonconformity.start,conformity_state:"
+msgid "Nonconforming Pending"
+msgstr "No conforme pendent"
+
+msgctxt "selection:account.invoice.nonconformity.start,nonconformity_culprit:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "selection:account.invoice.nonconformity.start,nonconformity_culprit:"
+msgid "Supplier"
+msgstr "Proveïdor"
+
 msgctxt "view:account.invoice.conform_group-res.user:"
 msgid "Conform Group User"
 msgstr "Usuari de grup de conformitat"
@@ -222,10 +267,22 @@ msgctxt "view:account.invoice.conform_group:"
 msgid "Conform Group"
 msgstr "Grup de conformitats"
 
+msgctxt "view:account.invoice.nonconformity.start:"
+msgid "Nonconform Invoices"
+msgstr "Factures no conforme"
+
 msgctxt "view:account.invoice:"
 msgid "Review Conformity"
 msgstr "Revisió Conformitat"
 
 msgctxt "view:res.user:"
 msgid "Invoice Conform Groups"
-msgstr "Grups de conformitat de factures"
+msgstr "Grups factures a conformar"
+
+msgctxt "wizard_button:account.invoice.nonconformity,start,end:"
+msgid "Cancel"
+msgstr "Cancel·lat"
+
+msgctxt "wizard_button:account.invoice.nonconformity,start,nonconforming:"
+msgid "Nonconforming"
+msgstr "No conforme"
