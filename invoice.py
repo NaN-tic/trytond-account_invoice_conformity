@@ -6,8 +6,10 @@ from trytond.pyson import Eval, Bool, Not, Equal
 from trytond import backend
 from trytond.transaction import Transaction
 from sql.conditionals import Case
+from trytond.wizard import Wizard, StateView, StateTransition, Button
 
-__all__ = ['ConformGroupUser', 'ConformGroup', 'Invoice']
+__all__ = ['ConformGroupUser', 'ConformGroup', 'Invoice', 'InvoiceConform',
+    'InvoiceNonconform', 'InvoiceNonconformStart']
 
 CONFORMITY_STATE = [
     (None, ''),
@@ -17,8 +19,7 @@ CONFORMITY_STATE = [
     ('nonconforming', 'Nonconforming'),
     ]
 
-
-class ConformGroupUser(ModelSQL, ModelView):
+class ConformGroupUser(ModelSQL):
     'Conform Group - Users'
     __name__ = 'account.invoice.conform_group-res.user'
     group = fields.Many2One('account.invoice.conform_group', 'Group',
@@ -67,11 +68,6 @@ class Invoice:
                 })
         cls._check_modify_exclude += ['conform_by', 'conformity_state',
             'nonconformity_culprit', 'conforming_description']
-        cls._buttons.update({
-            'conform' : {
-                'invisible' : Eval('conformity_state') != 'pending',
-                }
-            })
 
     @classmethod
     def __register__(cls, module_name):
@@ -136,6 +132,8 @@ class Invoice:
         if ((not config.ensure_conformity)
                 or (self.type != 'in')
                 or (self.conformity_state is not None)):
+                or (self.type != ('in_invoice', 'in_credit_note'))
+                or (self.conformity_state is not None)):
             return False
         return True
 
@@ -154,6 +152,7 @@ class Invoice:
 
         config = Config(1)
         if (not config.ensure_conformity or (self.type != 'in')):
+                or self.type not in ('in_invoice', 'in_credit_note')):
             return
 
         if self.conformity_state != 'conforming':
@@ -189,13 +188,6 @@ class Invoice:
         super(Invoice, cls).post(invoices)
 
     @classmethod
-    @ModelView.button
-    def conform(cls, invoices):
-        cls.write(invoices, {
-            'conformity_state': 'conforming',
-            })
-
-    @classmethod
     def view_attributes(cls):
         return super(Invoice, cls).view_attributes() + [
             ('//page[@id="conform"]', 'states', {
@@ -227,3 +219,71 @@ class Invoice:
                 default=new_default)
 
         return new_records
+
+
+class InvoiceNonconformStart(ModelView):
+    "Nonconform Invoices"
+    __name__ = 'account.invoice.nonconformity.start'
+    conformity_state = fields.Selection([
+           ('nonconforming_pending', 'Nonconforming Pending'),
+           ('nonconforming', 'Nonconforming'),
+           ], 'Conformity State')
+    nonconformity_culprit = fields.Selection([
+            (None, ''),
+            ('supplier', 'Supplier'),
+            ('company', 'Company'),
+            ], 'Nonconformity Culprit', required=True)
+    conforming_description = fields.Text('Conforming Description')
+
+    @staticmethod
+    def default_conformity_state():
+       return 'nonconforming_pending'
+
+    @staticmethod
+    def default_conforming_description():
+        pool = Pool()
+        Invoice = pool.get('account.invoice')
+        active_id = Transaction().context['active_id']
+        invoice = Invoice(active_id)
+        return invoice.conforming_description
+
+
+class InvoiceNonconform(Wizard):
+    "Nonconform Invoices"
+    __name__ = 'account.invoice.nonconformity'
+    start = StateView('account.invoice.nonconformity.start',
+        'account_invoice_conformity.account_invoice_nonconformity_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Nonconforming', 'nonconforming', 'tryton-ok', default=True)
+            ])
+    nonconforming = StateTransition()
+
+    def transition_nonconforming(self):
+        pool = Pool()
+        Invoice = pool.get('account.invoice')
+
+        invoices = Invoice.browse(Transaction().context['active_ids'])
+        with Transaction().set_context(_check_access=False):
+            Invoice.write(invoices, {
+                'conformity_state': self.start.conformity_state,
+                'nonconformity_culprit': self.start.nonconformity_culprit,
+                'conforming_description': self.start.conforming_description,
+               })
+        return 'end'
+
+
+class InvoiceConform(Wizard):
+    "Conform Invoices"
+    __name__ = 'account.invoice.conformity'
+    start = StateTransition()
+
+    def transition_start(self):
+        pool = Pool()
+        Invoice = pool.get('account.invoice')
+
+        invoices = Invoice.browse(Transaction().context['active_ids'])
+        with Transaction().set_context(_check_access=False):
+            Invoice.write(invoices, {
+                'conformity_state': 'conforming',
+            })
+        return 'end'
