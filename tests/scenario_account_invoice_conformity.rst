@@ -15,7 +15,7 @@ Create database::
     >>> config = config.set_trytond()
     >>> config.pool.test = True
 
-Install account_invoice::
+Install account_invoice_conformity::
 
     >>> Module = Model.get('ir.module.module')
     >>> account_invoice_module, = Module.find(
@@ -52,7 +52,40 @@ Create company::
 Reload the context::
 
     >>> User = Model.get('res.user')
+    >>> Group = Model.get('res.group')
     >>> config._context = User.get_preferences(True, config.context)
+    >>> admin_user, = User.find(('login', '=', 'admin'))
+
+Create account user::
+
+    >>> account_user = User()
+    >>> account_user.name = 'Account'
+    >>> account_user.login = 'account'
+    >>> account_user.main_company = company
+    >>> account_group, = Group.find([('name', '=', 'Account')])
+    >>> account_user.groups.append(account_group)
+    >>> account_user.save()
+
+Create account admin user::
+
+    >>> account_admin_user = User()
+    >>> account_admin_user.name = 'Account Admin'
+    >>> account_admin_user.login = 'account_admin'
+    >>> account_admin_group, = Group.find([
+    ...         ('name', '=', 'Account Administration'),
+    ...         ])
+    >>> account_admin_user.groups.append(account_admin_group)
+    >>> account_admin_user.save()
+
+Create conformity user::
+
+    >>> conform_user = User()
+    >>> conform_user.name = 'Conformity'
+    >>> conform_user.login = 'conformity'
+    >>> conform_user.main_company = company
+    >>> conform_group, = Group.find([('name', '=', 'Conform')])
+    >>> conform_user.groups.append(conform_group)
+    >>> conform_user.save()
 
 Create fiscal year::
 
@@ -162,10 +195,10 @@ Create product::
     >>> template.default_uom = unit
     >>> template.type = 'service'
     >>> template.list_price = Decimal('40')
-    >>> template.cost_price = Decimal('20')
+    >>> template.cost_price = Decimal('25')
     >>> template.account_expense = expense
     >>> template.account_revenue = revenue
-    >>> template.supplier_taxes.append(tax)
+    >>> template.customer_taxes.append(tax)
     >>> template.save()
     >>> product.template = template
     >>> product.save()
@@ -175,12 +208,25 @@ Create payment term::
     >>> PaymentTerm = Model.get('account.invoice.payment_term')
     >>> PaymentTermLine = Model.get('account.invoice.payment_term.line')
     >>> payment_term = PaymentTerm(name='Term')
-    >>> payment_term_line = PaymentTermLine(type='remainder')
+    >>> payment_term_line = PaymentTermLine(type='percent', days=20,
+    ...     percentage=Decimal(50))
+    >>> payment_term.lines.append(payment_term_line)
+    >>> payment_term_line = PaymentTermLine(type='remainder', days=40)
     >>> payment_term.lines.append(payment_term_line)
     >>> payment_term.save()
 
-Create in invoice::
+Create a conform group::
 
+    >>> config.user = account_admin_user.id
+    >>> ConformGroup = Model.get('account.invoice.conform_group')
+    >>> conform_group = ConformGroup()
+    >>> conform_group.name = 'Account Conform Group'
+    >>> conform_group.users.append(conform_user)
+    >>> conform_group.save()
+
+Create invoice::
+
+    >>> config.user = account_user.id
     >>> Invoice = Model.get('account.invoice')
     >>> InvoiceLine = Model.get('account.invoice.line')
     >>> invoice = Invoice()
@@ -190,24 +236,32 @@ Create in invoice::
     >>> invoice.invoice_date = today
     >>> line = InvoiceLine()
     >>> invoice.lines.append(line)
+    >>> invoice.account = payable
     >>> line.product = product
     >>> line.quantity = 5
+    >>> line.unit_price = Decimal('20')
     >>> invoice.save()
-    >>> Invoice.post([invoice.id], config.context)
+    >>> invoice.conformity_state == None
+    True
+    >>> Invoice.post([invoice.id], config.context) # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
         ...
-    UserError: ('UserError', (u'Invoice "1 Party" can not be posted because it is not conformed.', ''))
-    >>> invoice.conformity_state = 'pending'
-    >>> invoice.save()
+    UserError: ...
+
+Conform invoice::
+
+    >>> conform = Wizard('account.invoice.conformity', [invoice])
+    >>> invoice.reload()
+    >>> invoice.conformity_state == 'conforming'
+    True
     >>> Invoice.post([invoice.id], config.context)
     >>> invoice.reload()
-    >>> invoice.state
-    u'posted'
-    >>> invoice.rec_name
-    u'***1 Party'
+    >>> invoice.state == 'posted'
+    True
 
 Create out invoice::
 
+    >>> config.user = account_user.id
     >>> invoice = Invoice()
     >>> invoice.party = party
     >>> invoice.payment_term = payment_term
@@ -215,6 +269,7 @@ Create out invoice::
     >>> invoice.lines.append(line)
     >>> line.product = product
     >>> line.quantity = 5
+    >>> line.unit_price = Decimal('40')
     >>> invoice.save()
     >>> Invoice.post([invoice.id], config.context)
     >>> invoice.reload()
@@ -223,8 +278,10 @@ Create out invoice::
 
 Disable configuration and check error doesn't raise::
 
+    >>> config.user = admin_user.id
     >>> account_config.ensure_conformity = False
     >>> account_config.save()
+
     >>> invoice = Invoice()
     >>> invoice.type = 'in_invoice'
     >>> invoice.party = party
@@ -232,8 +289,10 @@ Disable configuration and check error doesn't raise::
     >>> invoice.invoice_date = today
     >>> line = InvoiceLine()
     >>> invoice.lines.append(line)
+    >>> invoice.account = payable
     >>> line.product = product
     >>> line.quantity = 5
+    >>> line.unit_price = Decimal('20')
     >>> invoice.save()
     >>> Invoice.post([invoice.id], config.context)
     >>> invoice.reload()
