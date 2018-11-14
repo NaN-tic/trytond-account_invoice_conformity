@@ -161,7 +161,7 @@ class Invoice:
 
     def get_rec_name(self, name):
         res = super(Invoice, self).get_rec_name(name)
-        if self.type in ('in_invoice', 'in_credit_note'):
+        if self.type = 'in':
             if self.conformity_state == 'pending':
                 return ' P*** ' + res
             elif self.conformity_state == 'nonconforming_pending':
