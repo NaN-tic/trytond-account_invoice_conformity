@@ -171,6 +171,11 @@
             <field name="button" ref="conform_button"/>
             <field name="group" ref="group_conform"/>
         </record>
+        <record model="ir.model.button-res.group"
+                id="conform_button_group_account">
+            <field name="button" ref="conform_button"/>
+            <field name="group" ref="account.group_account"/>
+        </record>
 
         <!-- access -->
         <record model="ir.model.access" id="access_conform_group">
