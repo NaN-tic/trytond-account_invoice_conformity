@@ -9,6 +9,7 @@ from . import user
 def register():
     Pool.register(
         configuration.Configuration,
+        configuration.ConfigurationConformity,
         invoice.ConformGroup,
         invoice.ConformGroupUser,
         invoice.Invoice,
