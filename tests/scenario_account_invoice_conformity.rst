@@ -190,7 +190,7 @@ Create out invoice::
     >>> Invoice.post([invoice.id], config.context)
     >>> invoice.reload()
     >>> invoice.state
-    u'posted'
+    'posted'
 
 Disable configuration and check error doesn't raise::
 
@@ -213,6 +213,6 @@ Disable configuration and check error doesn't raise::
     >>> Invoice.post([invoice.id], config.context)
     >>> invoice.reload()
     >>> invoice.state
-    u'posted'
+    'posted'
     >>> invoice.conformity_state == None
     True
