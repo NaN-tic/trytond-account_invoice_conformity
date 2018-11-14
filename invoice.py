@@ -238,9 +238,10 @@ class InvoiceNonconformStart(ModelView):
     def default_conforming_description():
         pool = Pool()
         Invoice = pool.get('account.invoice')
-        active_id = Transaction().context['active_id']
-        invoice = Invoice(active_id)
-        return invoice.conforming_description
+        active_id = Transaction().context.get('active_id')
+        if active_id:
+            invoice = Invoice(active_id)
+            return invoice.conforming_description
 
 
 class InvoiceNonconform(Wizard):
