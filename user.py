@@ -6,8 +6,7 @@ from trytond.pool import PoolMeta
 __all__ = ['User']
 
 
-class User:
-    __metaclass__ = PoolMeta
+class User(metaclass=PoolMeta):
     __name__ = "res.user"
     user_conform_groups = fields.Many2Many(
         'account.invoice.conform_group-res.user', 'user', 'group',

@@ -9,8 +9,7 @@ from trytond.modules.company.model import CompanyValueMixin
 __all__ = ['Configuration', 'ConfigurationConformity']
 
 
-class Configuration:
-    __metaclass__ = PoolMeta
+class Configuration(metaclass=PoolMeta):
     __name__ = 'account.configuration'
     default_conformity_state = fields.MultiValue(fields.Selection(
         CONFORMITY_STATE, 'Default Conformity State'))

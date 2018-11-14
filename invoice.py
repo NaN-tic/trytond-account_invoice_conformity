@@ -35,8 +35,7 @@ class ConformGroup(ModelSQL, ModelView):
         'group', 'user', 'Users')
 
 
-class Invoice:
-    __metaclass__ = PoolMeta
+class Invoice(metaclass=PoolMeta):
     __name__ = 'account.invoice'
     conform_by = fields.Many2One('account.invoice.conform_group',
         'Conform by',
