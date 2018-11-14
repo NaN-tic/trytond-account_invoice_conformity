@@ -129,11 +129,8 @@ class Invoice:
         Config = Pool().get('account.configuration')
         config = Config(1)
 
-        if ((not config.ensure_conformity)
-                or (self.type != 'in')
-                or (self.conformity_state is not None)):
-                or (self.type != ('in_invoice', 'in_credit_note'))
-                or (self.conformity_state is not None)):
+        if (not config.ensure_conformity or self.type != 'in'
+                or self.conformity_state is not None):
             return False
         return True
 
@@ -141,9 +138,8 @@ class Invoice:
         Config = Pool().get('account.configuration')
         config = Config(1)
 
-        if ((not config.ensure_conformity)
-                or (self.type != 'in')
-                or (self.conformity_state is None)):
+        if (not config.ensure_conformity or self.type != 'in'
+                or self.conformity_state is None):
             return False
         return True
 
@@ -151,8 +147,7 @@ class Invoice:
         Config = Pool().get('account.configuration')
 
         config = Config(1)
-        if (not config.ensure_conformity or (self.type != 'in')):
-                or self.type not in ('in_invoice', 'in_credit_note')):
+        if not config.ensure_conformity or self.type != 'in':
             return
 
         if self.conformity_state != 'conforming':
