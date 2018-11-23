@@ -112,19 +112,6 @@ class Invoice:
         config = Config(1)
         return config.default_conformity_state
 
-    @staticmethod
-    def default_conform_by():
-        ConformGroup = Pool().get('account.invoice.conform_group')
-
-        conform_groups = ConformGroup.search([], limit=1)
-        if conform_groups:
-            return conform_groups[0].id
-
-    @fields.depends('conform_by')
-    def on_change_conformity_state(self):
-        if not self.conform_by:
-            self.conform_by = self.default_conform_by()
-
     def to_conforming(self):
         Config = Pool().get('account.configuration')
         config = Config(1)
@@ -160,6 +147,8 @@ class Invoice:
                 return ' P*** ' + res
             elif self.conformity_state == 'nonconforming_pending':
                 return ' NCP*** ' + res
+            elif self.conformity_state == 'nonconforming':
+                return ' NC*** ' + res
         return res
 
     @classmethod
@@ -209,7 +198,6 @@ class Invoice:
                 default=new_default)
         if invoices_w_cs:
             new_default['conformity_state'] = cls.default_conformity_state()
-            new_default['conform_by'] = cls.default_conform_by()
             new_records += super(Invoice, cls).copy(invoices_w_cs,
                 default=new_default)
 
