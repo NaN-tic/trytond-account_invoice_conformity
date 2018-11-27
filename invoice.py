@@ -40,7 +40,9 @@ class Invoice(metaclass=PoolMeta):
     conform_by = fields.Many2One('account.invoice.conform_group',
         'Conform by',
         states={
-            'required': Bool(Eval('conformity_state')),
+            'required': ((Eval('conformity_state') == 'nonconforming') &
+                (Eval('conformity_state', '') == 'closed')),
+            'invisible': ~Eval('type').in_(['in_invoice', 'in_credit_note']),
             })
     conformity_state = fields.Selection(CONFORMITY_STATE, 'Conformity State',
         states={
