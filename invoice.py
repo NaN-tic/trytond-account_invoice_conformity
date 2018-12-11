@@ -42,7 +42,7 @@ class Invoice:
         'Conform by',
         states={
             'required': Bool(Eval('conformity_state')) &
-                Bool(Eval('type').in_(['in_invoice', 'in_credit_note'])),
+                Bool(Eval('type'), 'in'),
             })
     conformity_state = fields.Selection(CONFORMITY_STATE, 'Conformity State',
         states={
