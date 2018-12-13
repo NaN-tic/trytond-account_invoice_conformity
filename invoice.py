@@ -42,8 +42,10 @@ class Invoice:
         'Conform by',
         states={
             'required': Bool(Eval('conformity_state')) &
-                Bool(Eval('type').in_(['in_invoice', 'in_credit_note'])),
-            })
+                Bool(Eval('type').in_(['in_invoice', 'in_credit_note'])) &
+                ~Eval('state').in_(['cancel', 'draft']),
+            },
+        depends=['conformity_state', 'type', 'state'])
     conformity_state = fields.Selection(CONFORMITY_STATE, 'Conformity State',
         states={
             'invisible': ~Eval('type').in_(['in_invoice', 'in_credit_note']),
