@@ -170,6 +170,8 @@ Conform invoice::
     >>> invoice.reload()
     >>> invoice.conformity_state == 'conforming'
     True
+    >>> invoice.conform_by = conform_group
+    >>> invoice.save()
     >>> Invoice.post([invoice.id], config.context)
     >>> invoice.reload()
     >>> invoice.state == 'posted'
