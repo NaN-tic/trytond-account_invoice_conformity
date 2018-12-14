@@ -205,7 +205,7 @@ msgstr "Conformar"
 
 msgctxt "selection:account.configuration,default_conformity_state:"
 msgid ""
-msgstr "TARRO ELITE BEST MOMENTS FLOR HIBISCUS 245gr C-6"
+msgstr ""
 
 msgctxt "selection:account.configuration,default_conformity_state:"
 msgid "Conforming"
