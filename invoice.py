@@ -7,6 +7,8 @@ from trytond import backend
 from trytond.transaction import Transaction
 from sql.conditionals import Case
 from trytond.wizard import Wizard, StateView, StateTransition, Button
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
 
 __all__ = ['ConformGroupUser', 'ConformGroup', 'Invoice', 'InvoiceConform',
     'InvoiceNonconform', 'InvoiceNonconformStart']
@@ -64,10 +66,6 @@ class Invoice(metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super(Invoice, cls).__setup__()
-        cls._error_messages.update({
-                'post_conforming': ('Invoice "%s" can not be posted because it '
-                    'is pending to conformed.'),
-                })
         cls._check_modify_exclude += ['conform_by', 'conformity_state',
             'nonconformity_culprit', 'conforming_description']
 
@@ -140,7 +138,9 @@ class Invoice(metaclass=PoolMeta):
             return
 
         if self.conformity_state != 'conforming':
-            self.raise_user_error('post_conforming', self.rec_name)
+            raise UserError(gettext(
+                'account_invoice_conformity.post_conforming',
+                    invoice=self.rec_name))
 
     def get_rec_name(self, name):
         res = super(Invoice, self).get_rec_name(name)
