@@ -2,17 +2,20 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "error:account.invoice:"
-msgid "Invoice \"%s\" can not be posted because it is pending to conformed."
-msgstr ""
-"La factura \"% s\" no se puede contabilizar porque está pendiente de ser "
-"conformada."
-
 msgctxt "field:account.configuration,default_conformity_state:"
 msgid "Default Conformity State"
 msgstr "Estado de conformidad por defecto"
 
 msgctxt "field:account.configuration,ensure_conformity:"
+msgid "Ensure Conformity"
+msgstr "Validar conformidad"
+
+msgctxt ""
+"field:account.configuration.default_account,default_conformity_state:"
+msgid "Default Conformity Sate"
+msgstr "Estado de conformidad por defecto"
+
+msgctxt "field:account.configuration.default_account,ensure_conformity:"
 msgid "Ensure Conformity"
 msgstr "Validar conformidad"
 
@@ -49,7 +52,7 @@ msgid "Name"
 msgstr "Nombre"
 
 msgctxt "field:account.invoice.conform_group,rec_name:"
-msgid "Name"
+msgid "Record Name"
 msgstr "Nombre"
 
 msgctxt "field:account.invoice.conform_group,users:"
@@ -62,7 +65,7 @@ msgstr "Fecha modificación"
 
 msgctxt "field:account.invoice.conform_group,write_uid:"
 msgid "Write User"
-msgstr "Usuario modificación"
+msgstr "Usuario de modificación"
 
 msgctxt "field:account.invoice.conform_group-res.user,create_date:"
 msgid "Create Date"
@@ -81,7 +84,7 @@ msgid "ID"
 msgstr "ID"
 
 msgctxt "field:account.invoice.conform_group-res.user,rec_name:"
-msgid "Name"
+msgid "Record Name"
 msgstr "Nombre"
 
 msgctxt "field:account.invoice.conform_group-res.user,user:"
@@ -94,7 +97,7 @@ msgstr "Fecha modificación"
 
 msgctxt "field:account.invoice.conform_group-res.user,write_uid:"
 msgid "Write User"
-msgstr "Usuario modificación"
+msgstr "Usuario de modificación"
 
 msgctxt "field:account.invoice.nonconformity.start,conforming_description:"
 msgid "Conforming Description"
@@ -111,10 +114,6 @@ msgstr "ID"
 msgctxt "field:account.invoice.nonconformity.start,nonconformity_culprit:"
 msgid "Nonconformity Culprit"
 msgstr "Culpable de la no conformidad"
-
-msgctxt "field:res.user,conform_groups:"
-msgid "Conform Groups IDs"
-msgstr "Identificadores de grupos de conformidad"
 
 msgctxt "field:res.user,user_conform_groups:"
 msgid "Conform Groups"
@@ -155,10 +154,6 @@ msgctxt "model:ir.action,name:act_conform_group_form"
 msgid "Conform Group"
 msgstr "Grupo de conformidad"
 
-msgctxt "model:ir.action,name:act_conform_group_user_form"
-msgid "Conform Group User"
-msgstr "Usuario de grupo de conformidad"
-
 msgctxt "model:ir.action,name:act_invoice_conform_invoice_form"
 msgid "Invoices to Conform"
 msgstr "Facturas para conformar"
@@ -187,6 +182,14 @@ msgctxt ""
 msgid "To Conform"
 msgstr "Para conformar"
 
+msgctxt "model:ir.message,text:post_conforming"
+msgid ""
+"Invoice \"%(invoice)s\" can not be posted because it is pending to "
+"conformed."
+msgstr ""
+"La factura \"%(invoice)s\" no se puede contabilizar porque está pendiente de"
+" conformar."
+
 msgctxt "model:ir.ui.menu,name:"
 msgid "Credit Notes to Conform"
 msgstr "Facturas de abono para conformar"
@@ -204,10 +207,6 @@ msgid "Conform"
 msgstr "Conformar"
 
 msgctxt "selection:account.configuration,default_conformity_state:"
-msgid ""
-msgstr ""
-
-msgctxt "selection:account.configuration,default_conformity_state:"
 msgid "Conforming"
 msgstr "Conforme"
 
@@ -220,6 +219,26 @@ msgid "Nonconforming Pending"
 msgstr "No conforme pendiente"
 
 msgctxt "selection:account.configuration,default_conformity_state:"
+msgid "Pending"
+msgstr "Pendiente"
+
+msgctxt ""
+"selection:account.configuration.default_account,default_conformity_state:"
+msgid "Conforming"
+msgstr "Conforme"
+
+msgctxt ""
+"selection:account.configuration.default_account,default_conformity_state:"
+msgid "Nonconforming"
+msgstr "No Conforme"
+
+msgctxt ""
+"selection:account.configuration.default_account,default_conformity_state:"
+msgid "Nonconforming Pending"
+msgstr "No conforme pendiente"
+
+msgctxt ""
+"selection:account.configuration.default_account,default_conformity_state:"
 msgid "Pending"
 msgstr "Pendiente"
 
