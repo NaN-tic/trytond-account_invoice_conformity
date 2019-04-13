@@ -8,10 +8,6 @@
             <field name="user" ref="res.user_admin"/>
             <field name="group" ref="group_conform"/>
         </record>
-        <record model="res.user-res.group" id="user_trigger_group_conform">
-            <field name="user" ref="res.user_trigger"/>
-            <field name="group" ref="group_conform"/>
-        </record>
 
         <!-- conform group -->
         <record model="ir.ui.view" id="conform_group_view_form">
