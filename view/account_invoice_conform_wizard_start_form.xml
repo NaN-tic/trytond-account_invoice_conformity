@@ -5,13 +5,8 @@ this repository contains the full copyright notices and license terms. -->
       <label name="conformity"/>
       <field name="conformity"/>
       <newline/>
-      <label name="conformity_state"/>
-      <field name="conformity_state"/>
-      <label name="nonconformity_culprit"/>
-      <field name="nonconformity_culprit"/>
-      <newline/>
       <label name="conforming_description"/>
       <newline/>
       <field name="conforming_description" colspan="4"/>
       <field name="user" invisible="1"/>
-  </form>
+</form>
