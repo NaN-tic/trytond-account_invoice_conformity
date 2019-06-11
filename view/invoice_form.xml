@@ -4,19 +4,13 @@ this repository contains the full copyright notices and license terms. -->
 <data>
     <xpath expr="/form/notebook/page[@id='invoice']/field[@name='lines']"
             position="before">
-        <label name="conformity_state"/>
-        <field name="conformity_state"/>
+        <label name="conformities_state"/>
+        <field name="conformities_state"/>
     </xpath>
     <xpath expr="/form/notebook/page[@id='info']" position="after">
         <page string="Review Conformity" id="conform" col="6">
-            <label name="conformity_state"/>
-            <field name="conformity_state"/>
-            <label name="conform_by"/>
-            <field name="conform_by"/>
-            <label name="nonconformity_culprit"/>
-            <field name="nonconformity_culprit"/>
-            <separator name="conforming_description" colspan="6"/>
-            <field name="conforming_description" colspan="6"/>
+            <field name="conformities" colspan="3"/>
+            <field name="conformities_summary" colspan="3" widget="richtext" toolbar="0" yexpand="1" yfill="1"/>
         </page>
     </xpath>
 </data>

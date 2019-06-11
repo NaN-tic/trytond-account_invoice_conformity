@@ -3,7 +3,6 @@
 this repository contains the full copyright notices and license terms. -->
 <data>
     <xpath expr="//field[@name='total_amount']" position="after">
-      <field name="conformity_state"/>
-      <field name="conform_by" tree_invisible="1"/>
+      <field name="conformities_state"/>
     </xpath>
 </data>

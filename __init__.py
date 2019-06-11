@@ -12,7 +12,10 @@ def register():
         configuration.ConfigurationConformity,
         invoice.ConformGroup,
         invoice.ConformGroupUser,
+        invoice.ConformGroupInvoice,
+        invoice.Conformity,
         invoice.Invoice,
+        invoice.InvoiceConformStart,
         invoice.InvoiceNonconformStart,
         user.User,
         module='account_invoice_conformity', type_='model')
