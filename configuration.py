@@ -11,16 +11,17 @@ __all__ = ['Configuration', 'ConfigurationConformity']
 
 class Configuration(metaclass=PoolMeta):
     __name__ = 'account.configuration'
-    default_conformity_state = fields.MultiValue(fields.Selection(
-        CONFORMITY_STATE, 'Default Conformity State'))
+    conformity_required = fields.MultiValue(fields.Boolean(
+            'Conformity Required', help=('If we mark it as true, it will '
+                'be necessary to create, at least, a conformity register')))
     ensure_conformity = fields.MultiValue(fields.Boolean('Ensure Conformity',
-        help=('If marked posted supplier invoices must be conforming before '
-            'posting them.')))
+            help=('If marked posted supplier invoices must be conforming '
+                'before posting them.')))
 
     @classmethod
     def multivalue_model(cls, field):
         pool = Pool()
-        if field in {'default_conformity_state', 'ensure_conformity'}:
+        if field in {'conformity_required', 'ensure_conformity'}:
             return pool.get('account.configuration.default_account')
         return super(Configuration, cls).multivalue_model(field)
 
@@ -28,6 +29,5 @@ class Configuration(metaclass=PoolMeta):
 class ConfigurationConformity(ModelSQL, CompanyValueMixin):
     "Account Configuration Default Account"
     __name__ = 'account.configuration.default_account'
-    default_conformity_state = fields.Selection(CONFORMITY_STATE,
-        'Default Conformity Sate')
+    conformity_required = fields.Boolean('Conformity Required')
     ensure_conformity = fields.Boolean('Ensure Conformity')
