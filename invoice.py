@@ -58,7 +58,8 @@ class Conformity(ModelSQL, ModelView):
         states={
             'required': True,
         }, select=True, ondelete='CASCADE')
-    state = fields.Selection(CONFORMITY_STATE, 'Conformity State')
+    state = fields.Selection(CONFORMITY_STATE, 'Conformity State',
+        select=True)
     nonconformity_culprit = fields.Selection([
             (None, ''),
             ('supplier', 'Supplier'),
@@ -287,24 +288,30 @@ class Invoice(metaclass=PoolMeta):
     @classmethod
     def get_conformities_state(cls, invoices, names):
         res = dict.fromkeys(names, {})
-        for invoice in invoices:
+        cursor = Transaction().connection.cursor()
+        invoice_ids = [x.id for x in invoices]
+        cursor.execute("""
+            select
+                invoice,
+                string_agg(state, ',')
+            from account_invoice_conformity
+            where invoice in (%s)
+            group by invoice """ % ",".join([str(x) for x in invoice_ids]))
+
+        for invoice_id, states_str in cursor.fetchall():
             state = None
-            if invoice.conformities:
-                states = {c.state for c in invoice.conformities}
-                if not states:
-                    state = None
-                elif len(states) == 1:
-                    state = list(states)[0]
-                else:
-                    if 'pending' in states:
-                        state = 'pending'
-                    elif 'gnc' in states:
-                        state = 'gnc'
-                    elif 'nonconforming' in states:
-                        state = 'nonconforming'
-                    elif 'conforming' in states:
-                        state = 'conforming'
-            res['conformities_state'][invoice.id] = state
+            states = states_str.split(',')
+            if len(states) == 1:
+                state = list(states)[0]
+            if 'pending' in states:
+                state = 'pending'
+            elif 'gnc' in states:
+                state = 'gnc'
+            elif 'nonconforming' in states:
+                state = 'nonconforming'
+            elif 'conforming' in states:
+                state = 'conforming'
+            res['conformities_state'][invoice_id] = state
         return res
 
     def to_pending(self):
