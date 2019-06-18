@@ -71,6 +71,10 @@ class Conformity(ModelSQL, ModelView):
     description = fields.Text('Conforming Description')
 
     @classmethod
+    def default_state(cls):
+        return 'pending'
+
+    @classmethod
     def create(cls, vlist):
         pool = Pool()
         Activity = pool.get('activity.activity')
