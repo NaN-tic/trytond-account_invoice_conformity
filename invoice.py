@@ -5,6 +5,7 @@ from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval, Bool, Not, Equal
 from trytond import backend
 from trytond.exceptions import UserError
+from sql.functions import Function
 from sql.conditionals import Case
 from trytond.transaction import Transaction
 from trytond.i18n import gettext
@@ -22,6 +23,11 @@ CONFORMITY_STATE = [
     ('gnc', 'Managing Nonconforming'),
     ('nonconforming', 'Nonconforming'),
     ]
+
+
+class StringAgg(Function):
+    __slots__ = ()
+    _function = 'STRING_AGG'
 
 
 class ConformGroupUser(ModelSQL):
@@ -158,7 +164,8 @@ class Invoice(metaclass=PoolMeta):
                 Bool(Eval('conformity_required')),
             },
         depends=['type', 'conformity_required', 'state'])
-    conformities_state = fields.Function(fields.Selection(CONFORMITY_STATE,
+    conformities_state = fields.Function(fields.Selection(
+                [(None, '')] + CONFORMITY_STATE,
             'Conformities State', states={
                 'invisible': Not(Equal(Eval('type'), 'in')) &
                 ~Bool(Eval('conformity_required')),
@@ -271,42 +278,34 @@ class Invoice(metaclass=PoolMeta):
     def search_conformities_state(cls, name, clause):
         pool = Pool()
         Conformity = pool.get('account.invoice.conformity')
-        conformities = Conformity.search([
-                ('state',) + tuple(clause[1:])
-                ])
-        ids = []
-        if conformities:
-            ids = list({c.invoice.id for c in conformities})
-        return [('id', 'in', ids)]
+
+        Operator = fields.SQL_OPERATORS[clause[1]]
+        table = Conformity.__table__()
+        query = table.select(table.invoice,
+            where=Operator(table.state, clause[2]))
+        return [('id', 'in', query)]
 
     @classmethod
-    def get_conformity_required(cls, invoices, names):
-        pool = Pool()
-        Config = pool.get('account.configuration')
-        config = Config(1)
-        res = dict.fromkeys(names, {})
-        for invoice in invoices:
-            res['conformity_required'][invoice.id] = config.conformity_required
-        return res
+    def get_conformities_state(cls, invoices, name):
+        Conformity = Pool().get('account.invoice.conformity')
 
-    @classmethod
-    def get_conformities_state(cls, invoices, names):
-        res = dict.fromkeys(names, {})
-        cursor = Transaction().connection.cursor()
         invoice_ids = [x.id for x in invoices]
-        cursor.execute("""
-            select
-                invoice,
-                string_agg(state, ',')
-            from account_invoice_conformity
-            where invoice in (%s)
-            group by invoice """ % ",".join([str(x) for x in invoice_ids]))
+        cursor = Transaction().connection.cursor()
 
+        table = Conformity.__table__()
+        query = table.select(
+            table.invoice,
+            StringAgg(table.state, ','),
+            where=table.invoice.in_(invoice_ids),
+            group_by=table.invoice)
+
+        cursor.execute(*query)
+        res = dict.fromkeys(invoice_ids)
         for invoice_id, states_str in cursor.fetchall():
             state = None
             states = states_str.split(',')
             if len(states) == 1:
-                state = list(states)[0]
+                state = states[0]
             if 'pending' in states:
                 state = 'pending'
             elif 'gnc' in states:
@@ -315,7 +314,17 @@ class Invoice(metaclass=PoolMeta):
                 state = 'nonconforming'
             elif 'conforming' in states:
                 state = 'conforming'
-            res['conformities_state'][invoice_id] = state
+            res[invoice_id] = state
+        return res
+
+    @classmethod
+    def get_conformity_required(cls, invoices, name):
+        pool = Pool()
+        Config = pool.get('account.configuration')
+        config = Config(1)
+        res = {}
+        for invoice in invoices:
+            res[invoice.id] = config.conformity_required
         return res
 
     def to_pending(self):
