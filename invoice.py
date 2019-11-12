@@ -302,19 +302,20 @@ class Invoice(metaclass=PoolMeta):
         cursor.execute(*query)
         res = dict.fromkeys(invoice_ids)
         for invoice_id, states_str in cursor.fetchall():
-            state = None
-            states = states_str.split(',')
-            if len(states) == 1:
-                state = states[0]
-            if 'pending' in states:
-                state = 'pending'
-            elif 'gnc' in states:
-                state = 'gnc'
-            elif 'nonconforming' in states:
-                state = 'nonconforming'
-            elif 'conforming' in states:
-                state = 'conforming'
-            res[invoice_id] = state
+            if states_str:
+                state = None
+                states = states_str.split(',')
+                if len(states) == 1:
+                    state = states[0]
+                if 'pending' in states:
+                    state = 'pending'
+                elif 'gnc' in states:
+                    state = 'gnc'
+                elif 'nonconforming' in states:
+                    state = 'nonconforming'
+                elif 'conforming' in states:
+                    state = 'conforming'
+                res[invoice_id] = state
         return res
 
     @classmethod
