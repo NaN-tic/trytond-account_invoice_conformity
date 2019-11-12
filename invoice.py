@@ -3,6 +3,7 @@
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval, Bool, Not, Equal
+from trytond.config import config, parse_uri
 from trytond import backend
 from trytond.exceptions import UserError
 from sql.functions import Function
@@ -27,8 +28,11 @@ CONFORMITY_STATE = [
 
 class StringAgg(Function):
     __slots__ = ()
-    _function = 'STRING_AGG'
-
+    uri = parse_uri(config.get('database', 'uri'))
+    if uri.scheme == 'postgresql':
+        _function = 'STRING_AGG'
+    else:
+        _function = 'group_concat'
 
 class ConformGroupUser(ModelSQL):
     'Conform Group - Users'
@@ -128,16 +132,20 @@ class Conformity(ModelSQL, ModelView):
         ActivityType = pool.get('activity.type')
         Invoice = pool.get('account.invoice')
         User = pool.get('res.user')
+        Date = pool.get('ir.date')
+        Data = pool.get('ir.model.data')
 
         if not invoice_id:
             return
 
         invoice = Invoice(invoice_id)
         activity = Activity()
-        activity.dtend = activity.default_dtstart()
-        with Transaction().set_context({'language': 'en'}):
-            activity.activity_type, = ActivityType.search([
-                ('name', '=', 'System')], limit=1)
+        activity.date = Date().today()
+        meeting_type, = Data.search([
+            ('module', '=', 'account_invoice_conformity'),
+            ('fs_id', '=', 'meeting_type'),
+            ], limit=1)
+        activity.activity_type = ActivityType(meeting_type.db_id)
         activity.state = 'held'
         activity.description = description
         activity.subject = invoice.rec_name
