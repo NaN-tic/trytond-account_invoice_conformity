@@ -141,11 +141,11 @@ class Conformity(ModelSQL, ModelView):
         invoice = Invoice(invoice_id)
         activity = Activity()
         activity.date = Date().today()
-        meeting_type, = Data.search([
+        data_meeting_type, = Data.search([
             ('module', '=', 'account_invoice_conformity'),
             ('fs_id', '=', 'meeting_type'),
             ], limit=1)
-        activity.activity_type = ActivityType(meeting_type.db_id)
+        activity.activity_type = ActivityType(data_meeting_type.db_id)
         activity.state = 'held'
         activity.description = description
         activity.subject = invoice.rec_name
@@ -400,16 +400,20 @@ class Invoice(metaclass=PoolMeta):
     def get_conformities_summary(self, name):
         pool = Pool()
         Activity = pool.get('activity.activity')
-        with Transaction().set_context({'language': 'en'}):
-            activities = Activity.search([
-                    ('activity_type.name', '=', 'System'),
-                    ('resource', '=', ('account.invoice', self.id))
-                    ], order=[('dtend', 'ASC')])
+        Data = pool.get('ir.model.data')
+
+        data_meeting_type, = Data.search([
+            ('module', '=', 'account_invoice_conformity'),
+            ('fs_id', '=', 'meeting_type'),
+            ], limit=1)
+        activities = Activity.search([
+                ('activity_type.id', '=', data_meeting_type.db_id),
+                ('resource', '=', ('account.invoice', self.id))
+                ], order=[('date', 'DESC')])
         body = []
         for activity in activities:
-            dtend = activity.dtend.strftime("%m/%d/%Y, %H:%M:%S")
             employee = activity.employee.rec_name.upper()
-            title = '{} - {}'.format(dtend, employee)
+            title = '{} - {}'.format(activity.date, employee)
             texts = '<br/>'.join(activity.description.split('\n'))
             body.append(
                 '<div align="left">'
