@@ -394,7 +394,7 @@ class Invoice(metaclass=PoolMeta):
     @classmethod
     def copy(cls, invoices, default=None):
         new_default = default.copy() if default else {}
-        new_default.setdefault('conformities')
+        new_default.setdefault('activities')
         return super(Invoice, cls).copy(invoices, default=new_default)
 
     def get_conformities_summary(self, name):
