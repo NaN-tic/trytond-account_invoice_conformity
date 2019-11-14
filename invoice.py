@@ -414,7 +414,8 @@ class Invoice(metaclass=PoolMeta):
         for activity in activities:
             employee = activity.employee.rec_name.upper()
             title = '{} - {}'.format(activity.date, employee)
-            texts = '<br/>'.join(activity.description.split('\n'))
+            texts = '<br/>'.join(activity.description.split('\n') if
+                activity.description else [])
             body.append(
                 '<div align="left">'
                 '<font size="4"><b>{}</b></font>'
