@@ -146,7 +146,7 @@ class Conformity(ModelSQL, ModelView):
             ('fs_id', '=', 'meeting_type'),
             ], limit=1)
         activity.activity_type = ActivityType(data_meeting_type.db_id)
-        activity.state = 'held'
+        activity.state = 'done'
         activity.description = description
         activity.subject = invoice.rec_name
         activity.resource = invoice
