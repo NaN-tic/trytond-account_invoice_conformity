@@ -126,6 +126,12 @@ class Conformity(ModelSQL, ModelView):
         return super(Conformity, cls).write(*args)
 
     @classmethod
+    def copy(cls, conformities, default=None):
+        new_default = default.copy() if default else {}
+        new_default.setdefault('state', cls.default_state())
+        return super(Conformity, cls).copy(conformities, default=new_default)
+
+    @classmethod
     def create_activity(cls, invoice_id, description):
         pool = Pool()
         Activity = pool.get('activity.activity')
