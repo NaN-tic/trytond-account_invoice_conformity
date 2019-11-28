@@ -159,15 +159,15 @@ Create conform groups::
     >>> conform_group2.save()
 
 Create activity reference::
-    
+
     >>> IrModel = Model.get('ir.model')
     >>> ActivityReference = Model.get('activity.reference')
     >>> invoice_reference = ActivityReference()
-    >>> invoice_reference.model, = IrModel.find(['model', '=', 'account.invoice'])  
+    >>> invoice_reference.model, = IrModel.find(['model', '=', 'account.invoice'])
     >>> invoice_reference.save()
 
 Create invoice::
-    
+
     >>> config.user = account_user.id
     >>> config._context = User.get_preferences(True, config.context)
     >>> Invoice = Model.get('account.invoice')
@@ -190,7 +190,7 @@ Create invoice::
     >>> conformity.group = conform_group
     >>> conformity.state = 'pending'
     >>> conformity.description = 'new conformity'
-    >>> invoice.save() 
+    >>> invoice.save()
     >>> invoice.conformities_state
     'pending'
     >>> len(invoice.activities) == 1
@@ -208,12 +208,12 @@ Create invoice::
     UserError: ...
 
 Conform invoice::
-    
+
     >>> config.user = conform_user.id
     >>> config._context = User.get_preferences(True, config.context)
     >>> conform = Wizard('account.invoice.conformity.wizard', [invoice])
     >>> conform.form.conformity, = invoice.conformities
-    >>> conform.form.description = 'Test conformities'
+    >>> conform.form.conforming_description = 'Test conformities'
     >>> conform.execute('conforming')
 
 Check conformities are modified and activities are created throught the Wizard::
