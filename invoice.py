@@ -204,13 +204,12 @@ class Invoice(metaclass=PoolMeta):
 
     @classmethod
     def __register__(cls, module_name):
-        TableHandler = backend.get('TableHandler')
         cursor = Transaction().connection.cursor()
         pool = Pool()
         Conformity = pool.get('account.invoice.conformity')
         conformity = Conformity.__table__()
         sql_table = cls.__table__()
-        table = TableHandler(cls, module_name)
+        table = backend.TableHandler(cls, module_name)
         today = datetime.today()
 
         # Migration from 4.0: rename conformity_result into conformity_state
