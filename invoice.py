@@ -96,14 +96,10 @@ class Conformity(ModelSQL, ModelView):
     def create(cls, vlist):
         pool = Pool()
         Activity = pool.get('activity.activity')
-        vlist = [x.copy() for x in vlist]
+
         new_activities = []
         for values in vlist:
-            invoice = values.get('invoice')
-            description = values.get('description', '')
-            activity = cls.create_activity(invoice, description)
-            if activity:
-                new_activities.append(activity)
+            new_activities += cls._get_activities(values)
 
         if new_activities:
             with Transaction().set_context(_check_access=False):
@@ -115,19 +111,13 @@ class Conformity(ModelSQL, ModelView):
     def write(cls, *args, **kwargs):
         pool = Pool()
         Activity = pool.get('activity.activity')
+
         actions = iter(args)
         new_activities = []
-        res = {}
-        for conformity, values in zip(actions, actions):
-            conformity, = conformity
-            res.setdefault(conformity.id, {}).update(values)
+        for conformities, values in zip(actions, actions):
+            for conformity in conformities:
+                new_activities += cls._get_activities(values, conformity)
 
-        for values in res.values():
-            description = values.get('description', '')
-            invoice = values.get('invoice')
-            activity = cls.create_activity(invoice, description)
-            if activity:
-                new_activities.append(activity)
         if new_activities:
             Activity.create(a._save_values for a in new_activities)
 
@@ -140,7 +130,7 @@ class Conformity(ModelSQL, ModelView):
         return super(Conformity, cls).copy(conformities, default=new_default)
 
     @classmethod
-    def create_activity(cls, invoice_id, description):
+    def _get_activities(cls, values, record=None):
         pool = Pool()
         Activity = pool.get('activity.activity')
         ActivityType = pool.get('activity.type')
@@ -149,10 +139,26 @@ class Conformity(ModelSQL, ModelView):
         Date = pool.get('ir.date')
         Data = pool.get('ir.model.data')
 
-        if not invoice_id:
-            return
+        # Do not create an activity if description is not set...
+        if 'description' not in values:
+            return []
+        description = values['description']
+        # ...or does not change its value...
+        if record:
+            if description == record.description:
+                return []
+        # ...or is empty
+        elif not description:
+            return []
 
-        invoice = Invoice(invoice_id)
+        invoice_id = values.get('invoice')
+        if invoice_id:
+            invoice = Invoice(invoice_id)
+        else:
+            if not record:
+                return []
+            invoice = record.invoice
+
         activity = Activity()
         activity.date = Date().today()
         data_meeting_type, = Data.search([
@@ -171,7 +177,7 @@ class Conformity(ModelSQL, ModelView):
             if user.employees:
                 employee = user.employees[0]
         activity.employee = employee
-        return activity
+        return [activity]
 
 
 class Invoice(metaclass=PoolMeta):
