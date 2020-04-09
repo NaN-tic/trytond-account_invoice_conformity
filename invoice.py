@@ -87,7 +87,7 @@ class Conformity(ModelSQL, ModelView):
         return 'pending'
 
     @fields.depends('invoice')
-    def get_group_required(self, name):
+    def on_change_with_group_required(self, name=None):
         if self.invoice and self.invoice.state == 'posted':
             return True
         return False
