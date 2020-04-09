@@ -314,7 +314,7 @@ msgctxt ""
 msgid "To Conform"
 msgstr "Per conformar"
 
-msgctxt "model:ir.message,text:post_conforming"
+msgctxt "model:ir.message,text:msg_post_conforming"
 msgid ""
 "Invoice \"%(invoice)s\" can not be posted because it is pending to "
 "conformed."

@@ -66,8 +66,10 @@ class Conformity(ModelSQL, ModelView):
         ondelete='CASCADE')
     group = fields.Many2One('account.invoice.conform_group', 'Group',
         states={
-            'required': True,
-        }, select=True, ondelete='CASCADE')
+            'required': Bool(Eval('group_required')),
+            }, depends=['group_required'], select=True, ondelete='CASCADE')
+    group_required = fields.Function(fields.Boolean('Group Required'),
+        'on_change_with_group_required')
     state = fields.Selection(CONFORMITY_STATE, 'Conformity State',
         select=True)
     nonconformity_culprit = fields.Selection([
@@ -83,6 +85,12 @@ class Conformity(ModelSQL, ModelView):
     @classmethod
     def default_state(cls):
         return 'pending'
+
+    @fields.depends('invoice')
+    def get_group_required(self, name):
+        if self.invoice and self.invoice.state == 'posted':
+            return True
+        return False
 
     @classmethod
     def create(cls, vlist):
@@ -353,12 +361,17 @@ class Invoice(metaclass=PoolMeta):
     def check_conformity(self):
         Config = Pool().get('account.configuration')
         config = Config(1)
+        for conformity in self.conformities:
+            if not conformity.group:
+                raise UserError(gettext('account_invoice_conformity.'
+                        'msg_missing_conformity_group', invoice=self.rec_name))
+
         if not config.ensure_conformity or self.type != 'in':
             return
 
         if self.conformities_state != 'conforming':
             raise UserError(gettext(
-                'account_invoice_conformity.post_conforming',
+                'account_invoice_conformity.msg_post_conforming',
                     invoice=self.rec_name))
 
     def get_rec_name(self, name):
