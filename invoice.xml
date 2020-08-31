@@ -76,7 +76,7 @@
             <field name="res_model">account.invoice</field>
             <field name="domain"
                 eval="[('type', '=', 'in'),
-                ('state', '!=', 'cancel'),
+                ('state', '!=', 'cancelled'),
                 ('conformities_state', '!=', None),
                 ('conformities.group.users', '=', Eval('context', {}).get('_user', 0))]"
                 pyson="1"/>
