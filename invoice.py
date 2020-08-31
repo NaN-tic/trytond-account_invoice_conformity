@@ -188,7 +188,7 @@ class Invoice(metaclass=PoolMeta):
         states={
             'invisible': Not(Equal(Eval('type'), 'in')),
             'required': Bool(Eval('type') == 'in') &
-                ~Eval('state').in_(['cancel', 'draft']) &
+                ~Eval('state').in_(['cancelled', 'draft']) &
                 Bool(Eval('conformity_required')),
             },
         depends=['type', 'conformity_required', 'state'])
