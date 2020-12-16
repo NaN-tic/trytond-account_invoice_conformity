@@ -10,6 +10,14 @@ msgctxt "field:account.configuration,ensure_conformity:"
 msgid "Ensure Conformity"
 msgstr "Validar conformitat"
 
+msgctxt "field:account.configuration,default_employee:"
+msgid "Default Employee"
+msgstr "Empleat per defecte"
+
+msgctxt "field:account.configuration.default_employee,default_employee:"
+msgid "Default Employee"
+msgstr "Empleat per defecte"
+
 msgctxt "field:account.configuration.default_account,conformity_required:"
 msgid "Conformity Required"
 msgstr "Conformitat Requerida"
