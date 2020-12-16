@@ -135,6 +135,7 @@ class Conformity(ModelSQL, ModelView):
         Activity = pool.get('activity.activity')
         ActivityType = pool.get('activity.type')
         Invoice = pool.get('account.invoice')
+        Configuration = pool.get('account.configuration')
         User = pool.get('res.user')
         Date = pool.get('ir.date')
         Data = pool.get('ir.model.data')
@@ -174,8 +175,11 @@ class Conformity(ModelSQL, ModelView):
         employee = activity.default_employee()
         if not employee:
             user = User(Transaction().user)
-            if user.employees:
+            if user and user.employees:
                 employee = user.employees[0]
+            else:
+                configuration = Configuration(1)
+                employee = configuration.default_employee
         activity.employee = employee
         return [activity]
 
