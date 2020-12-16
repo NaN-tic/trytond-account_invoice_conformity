@@ -7,5 +7,7 @@
         <field name="conformity_required"/>
         <label name="ensure_conformity"/>
         <field name="ensure_conformity"/>
+        <label name="default_employee"/>
+        <field name="default_employee"/>
     </xpath>
 </data>

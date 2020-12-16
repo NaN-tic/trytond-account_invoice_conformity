@@ -10,6 +10,7 @@ def register():
     Pool.register(
         configuration.Configuration,
         configuration.ConfigurationConformity,
+        configuration.ConfigurationDefaultEmployee,
         invoice.ConformGroup,
         invoice.ConformGroupUser,
         invoice.ConformGroupInvoice,
