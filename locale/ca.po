@@ -46,6 +46,10 @@ msgctxt "field:account.invoice,conformity_required:"
 msgid "Conformity Required"
 msgstr "Conformitat Requerida"
 
+msgctxt "field:account.invoice,to_conform:"
+msgid "To Conform"
+msgstr "A conformitar"
+
 msgctxt "field:account.invoice.conform_group,create_date:"
 msgid "Create Date"
 msgstr "Data de creació"

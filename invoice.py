@@ -34,6 +34,7 @@ class StringAgg(Function):
     else:
         _function = 'group_concat'
 
+
 class ConformGroupUser(ModelSQL):
     'Conform Group - Users'
     __name__ = 'account.invoice.conform_group-res.user'
@@ -186,7 +187,6 @@ class Conformity(ModelSQL, ModelView):
 
 class Invoice(metaclass=PoolMeta):
     __name__ = 'account.invoice'
-
     conformities = fields.One2Many('account.invoice.conformity',
         'invoice', 'Conformities',
         states={
@@ -210,6 +210,8 @@ class Invoice(metaclass=PoolMeta):
         'get_conformities_summary')
     conformity_required = fields.Function(
         fields.Boolean('Conformity Required'), 'get_conformity_required')
+    to_conform = fields.Function(fields.Boolean('To Conform'),
+        'get_to_conform', searcher='search_to_conform')
 
     @classmethod
     def __setup__(cls):
@@ -359,6 +361,21 @@ class Invoice(metaclass=PoolMeta):
         for invoice in invoices:
             res[invoice.id] = config.conformity_required
         return res
+
+    def get_to_conform(self, name):
+        Config = Pool().get('account.configuration')
+
+        config = Config(1)
+        return config.ensure_conformity or False
+
+    @classmethod
+    def search_to_conform(cls, name, clause):
+        Config = Pool().get('account.configuration')
+
+        config = Config(1)
+        # if ensure_conformity is false, filter posted invoices. Omit clause values
+        if not config.ensure_conformity:
+            return [('state', '=', 'posted')]
 
     def to_pending(self):
         Config = Pool().get('account.configuration')
