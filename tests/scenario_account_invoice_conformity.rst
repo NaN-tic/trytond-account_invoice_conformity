@@ -56,7 +56,6 @@ Create account user::
     >>> account_user = User()
     >>> account_user.name = 'Account'
     >>> account_user.login = 'account'
-    >>> account_user.main_company = company
     >>> account_user.employees.append(employee1)
     >>> account_user.employee = employee1
     >>> account_group, = Group.find([('name', '=', 'Account')])
@@ -68,7 +67,6 @@ Create account admin user::
     >>> account_user_admin = User()
     >>> account_user_admin.name = 'Account Admin'
     >>> account_user_admin.login = 'account_admin'
-    >>> account_user_admin.main_company = company
     >>> account_user_admin.employees.append(employee2)
     >>> account_user_admin.employee = employee2
     >>> account_admin_group, = Group.find([('name', '=', 'Account Administration')])
@@ -80,7 +78,6 @@ Create conformity user::
     >>> conform_user = User()
     >>> conform_user.name = 'Conformity'
     >>> conform_user.login = 'conformity'
-    >>> conform_user.main_company = company
     >>> conform_user.employees.append(employee3)
     >>> conform_user.employee = employee3
     >>> conform_group, = Group.find([('name', '=', 'Conform')])
