@@ -217,8 +217,8 @@ class Invoice(metaclass=PoolMeta):
         for fname in ('type', 'conformities'):
             if fname not in cls.party.on_change:
                 cls.party.on_change.add(fname)
-        cls._check_modify_exclude += ['conformities', 'conformities_state',
-            'activities', 'conformities_summary']
+        cls._check_modify_exclude |= {'conformities', 'conformities_state',
+            'activities', 'conformities_summary'}
 
     @classmethod
     def __register__(cls, module_name):
