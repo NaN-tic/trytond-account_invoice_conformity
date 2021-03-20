@@ -2,13 +2,8 @@
 #copyright notices and license terms.
 from trytond.model import fields, ModelSQL
 from trytond.pool import PoolMeta, Pool
-from trytond.modules.account_invoice_conformity.invoice import CONFORMITY_STATE
 from trytond.modules.company.model import CompanyValueMixin
 from trytond.pyson import Eval
-
-
-__all__ = ['Configuration', 'ConfigurationConformity',
-    'ConfigurationDefaultEmployee']
 
 
 class Configuration(metaclass=PoolMeta):
