@@ -373,9 +373,9 @@ class Invoice(metaclass=PoolMeta):
         Config = Pool().get('account.configuration')
 
         config = Config(1)
-        # if ensure_conformity is false, filter posted invoices. Omit clause values
+        # if ensure_conformity is false, filter posted and paid invoices. Omit clause values
         if not config.ensure_conformity:
-            return [('state', '=', 'posted')]
+            return [('state', 'in', ['posted', 'paid'])]
 
     def to_pending(self):
         Config = Pool().get('account.configuration')
