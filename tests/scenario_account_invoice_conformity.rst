@@ -39,13 +39,22 @@ Create Employees::
 
     >>> Employee = Model.get('company.employee')
     >>> Party = Model.get('party.party')
-    >>> employee1 = Employee(party=Party(name='Employee'))
+    >>> employee_party = Party(name='Employee')
+    >>> employee_party.save()
+    >>> employee1 = Employee()
     >>> employee1.company = company
+    >>> employee1.party = employee_party
     >>> employee1.save()
-    >>> employee2 = Employee(party=Party(name='Employee'))
+    >>> employee_party = Party(name='Employee')
+    >>> employee_party.save()
+    >>> employee2 = Employee()
+    >>> employee2.party = employee_party
     >>> employee2.company = company
     >>> employee2.save()
-    >>> employee3 = Employee(party=Party(name='Employee'))
+    >>> employee3 = Employee()
+    >>> employee_party = Party(name='Employee')
+    >>> employee_party.save()
+    >>> employee3.party = employee_party
     >>> employee3.company = company
     >>> employee3.save()
 
@@ -156,15 +165,15 @@ Create conform groups::
     >>> conform_group2.save()
 
 Create activity reference::
-    
+
     >>> IrModel = Model.get('ir.model')
     >>> ActivityReference = Model.get('activity.reference')
     >>> invoice_reference = ActivityReference()
-    >>> invoice_reference.model, = IrModel.find(['model', '=', 'account.invoice'])  
+    >>> invoice_reference.model, = IrModel.find(['model', '=', 'account.invoice'])
     >>> invoice_reference.save()
 
 Create invoice::
-    
+
     >>> config.user = account_user.id
     >>> config._context = User.get_preferences(True, config.context)
     >>> Invoice = Model.get('account.invoice')
