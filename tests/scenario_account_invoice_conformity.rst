@@ -159,15 +159,15 @@ Create conform groups::
     >>> conform_group2.save()
 
 Create activity reference::
-    
+
     >>> IrModel = Model.get('ir.model')
     >>> ActivityReference = Model.get('activity.reference')
     >>> invoice_reference = ActivityReference()
-    >>> invoice_reference.model, = IrModel.find(['model', '=', 'account.invoice'])  
+    >>> invoice_reference.model, = IrModel.find(['model', '=', 'account.invoice'])
     >>> invoice_reference.save()
 
 Create invoice::
-    
+
     >>> config.user = account_user.id
     >>> config._context = User.get_preferences(True, config.context)
     >>> Invoice = Model.get('account.invoice')
@@ -190,7 +190,7 @@ Create invoice::
     >>> conformity.group = conform_group
     >>> conformity.state = 'pending'
     >>> conformity.description = 'new conformity'
-    >>> invoice.save() 
+    >>> invoice.save()
     >>> invoice.conformities_state
     'pending'
     >>> len(invoice.activities) == 1
@@ -208,7 +208,7 @@ Create invoice::
     UserError: ...
 
 Conform invoice::
-    
+
     >>> config.user = conform_user.id
     >>> config._context = User.get_preferences(True, config.context)
     >>> conform = Wizard('account.invoice.conformity.wizard', [invoice])
@@ -268,4 +268,14 @@ Disable configuration and check error doesn't raise::
     >>> invoice.state
     'posted'
     >>> invoice.conformities_state == None
+    True
+
+Check to_conform invoices according account configuration::
+
+    >>> new_invoce, = Invoice.copy([invoice], config.context)
+    >>> len(Invoice.find([('to_conform', '=', True)])) == 3
+    True
+    >>> account_config.ensure_conformity = True
+    >>> account_config.save()
+    >>> len(Invoice.find([('to_conform', '=', True)])) == 4
     True
