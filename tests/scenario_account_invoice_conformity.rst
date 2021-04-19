@@ -269,3 +269,13 @@ Disable configuration and check error doesn't raise::
     'posted'
     >>> invoice.conformities_state == None
     True
+
+Check to_conform invoices according account configuration::
+
+    >>> new_invoce, = Invoice.copy([invoice], config.context)
+    >>> len(Invoice.find([('to_conform', '=', True)])) == 3
+    True
+    >>> account_config.ensure_conformity = True
+    >>> account_config.save()
+    >>> len(Invoice.find([('to_conform', '=', True)])) == 4
+    True

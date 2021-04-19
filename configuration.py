@@ -40,8 +40,8 @@ class ConfigurationConformity(ModelSQL, CompanyValueMixin):
     conformity_required = fields.Boolean('Conformity Required')
     ensure_conformity = fields.Boolean('Ensure Conformity')
 
+
 class ConfigurationDefaultEmployee(ModelSQL, CompanyValueMixin):
     'Account Configuration Default Employee'
     __name__ = 'account.configuration.default_employee'
-
     default_employee = fields.Many2One('company.employee', 'Default Employee')

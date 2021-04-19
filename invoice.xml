@@ -77,6 +77,7 @@
             <field name="domain"
                 eval="[('type', '=', 'in'),
                 ('state', '!=', 'cancel'),
+                ('to_conform', '=', True),
                 ('conformities_state', '!=', None),
                 ('conformities.group.users', '=', Eval('context', {}).get('_user', 0))]"
                 pyson="1"/>
