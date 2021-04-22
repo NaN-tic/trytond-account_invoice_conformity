@@ -174,8 +174,7 @@ Create activity reference::
 
 Create invoice::
 
-    >>> config.user = account_user.id
-    >>> config._context = User.get_preferences(True, config.context)
+    >>> set_user(account_user)
     >>> Invoice = Model.get('account.invoice')
     >>> InvoiceLine = Model.get('account.invoice.line')
     >>> Conformity = Model.get('account.invoice.conformity')
@@ -215,8 +214,7 @@ Create invoice::
 
 Conform invoice::
 
-    >>> config.user = conform_user.id
-    >>> config._context = User.get_preferences(True, config.context)
+    >>> set_user(conform_user)
     >>> conform = Wizard('account.invoice.conformity.wizard', [invoice])
     >>> conform.form.conformity, = invoice.conformities
     >>> conform.form.conforming_description = 'Test conformities'
@@ -224,8 +222,7 @@ Conform invoice::
 
 Check conformities are modified and activities are created throught the Wizard::
 
-    >>> config.user = account_user.id
-    >>> config._context = User.get_preferences(True, config.context)
+    >>> set_user(account_user)
     >>> invoice.reload()
     >>> invoice.conformities_state == 'conforming'
     True
