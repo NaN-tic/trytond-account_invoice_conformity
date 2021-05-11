@@ -128,6 +128,7 @@ class Conformity(ModelSQL, ModelView):
     def copy(cls, conformities, default=None):
         new_default = default.copy() if default else {}
         new_default.setdefault('state', cls.default_state())
+        new_default.setdefault('description', '')
         return super(Conformity, cls).copy(conformities, default=new_default)
 
     @classmethod
