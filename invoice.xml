@@ -151,7 +151,7 @@
 
         <menuitem name="Conform Invoices"
             action="act_invoice_conform_by_groups_invoice_form"
-            id="menu_invoice_conform_invoice" sequence="1"
+            id="menu_invoice_conform_invoice" sequence="20"
             icon="tryton-list"/>
 
         <record model="ir.ui.menu-res.group"
