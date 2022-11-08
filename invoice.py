@@ -38,8 +38,8 @@ class ConformGroupUser(ModelSQL):
     'Conform Group - Users'
     __name__ = 'account.invoice.conform_group-res.user'
     group = fields.Many2One('account.invoice.conform_group', 'Group',
-        required=True, select=True)
-    user = fields.Many2One('res.user', 'User', required=True, select=True)
+        required=True)
+    user = fields.Many2One('res.user', 'User', required=True)
 
 
 class ConformGroup(ModelSQL, ModelView):
@@ -54,20 +54,20 @@ class ConformGroupInvoice(ModelSQL):
     'Conform Group - Invoice'
     __name__ = 'account.invoice.conform_group-account.invoice'
     invoice = fields.Many2One('account.invoice', 'Invoice',
-        required=True, select=True)
+        required=True)
     group = fields.Many2One('account.invoice.conform_group', 'Group',
-        required=True, select=True)
+        required=True)
 
 
 class Conformity(ModelSQL, ModelView):
     'Conformity'
     __name__ = 'account.invoice.conformity'
-    invoice = fields.Many2One('account.invoice', 'Invoice', select=True,
+    invoice = fields.Many2One('account.invoice', 'Invoice',
         ondelete='CASCADE')
     group = fields.Many2One('account.invoice.conform_group', 'Group',
         states={
             'required': Bool(Eval('group_required')),
-            }, depends=['group_required'], select=True, ondelete='CASCADE')
+            }, depends=['group_required'], ondelete='CASCADE')
     group_required = fields.Function(fields.Boolean('Group Required'),
         'on_change_with_group_required')
     state = fields.Selection(CONFORMITY_STATE, 'Conformity State',
