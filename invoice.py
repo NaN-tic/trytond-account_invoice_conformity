@@ -70,8 +70,7 @@ class Conformity(ModelSQL, ModelView):
             }, depends=['group_required'], ondelete='CASCADE')
     group_required = fields.Function(fields.Boolean('Group Required'),
         'on_change_with_group_required')
-    state = fields.Selection(CONFORMITY_STATE, 'Conformity State',
-        select=True)
+    state = fields.Selection(CONFORMITY_STATE, 'Conformity State')
     nonconformity_culprit = fields.Selection([
             (None, ''),
             ('supplier', 'Supplier'),
