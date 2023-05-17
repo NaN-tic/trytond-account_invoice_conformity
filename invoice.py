@@ -214,9 +214,6 @@ class Invoice(metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super(Invoice, cls).__setup__()
-        for fname in ('type', 'conformities'):
-            if fname not in cls.party.on_change:
-                cls.party.on_change.add(fname)
         cls._check_modify_exclude |= {'conformities', 'conformities_state',
             'activities', 'conformities_summary'}
 
