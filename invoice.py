@@ -96,6 +96,7 @@ class Conformity(ModelSQL, ModelView):
         pool = Pool()
         Activity = pool.get('activity.activity')
 
+        vlist = [x.copy() for x in vlist]
         new_activities = []
         for values in vlist:
             new_activities += cls._get_activities(values)
