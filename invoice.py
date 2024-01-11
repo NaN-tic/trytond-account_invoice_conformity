@@ -67,7 +67,7 @@ class Conformity(ModelSQL, ModelView):
     group = fields.Many2One('account.invoice.conform_group', 'Group',
         states={
             'required': Bool(Eval('group_required')),
-            }, depends=['group_required'], ondelete='CASCADE')
+            }, ondelete='CASCADE')
     group_required = fields.Function(fields.Boolean('Group Required'),
         'on_change_with_group_required')
     state = fields.Selection(CONFORMITY_STATE, 'Conformity State')
@@ -456,7 +456,7 @@ class InvoiceNonconformStart(ModelView):
     conformity = fields.Many2One('account.invoice.conformity', 'Conformity',
         domain=[('invoice', '=', Eval('context', {}).get('active_id', 0)),
                ('group.users', '=', Eval('user', 0))
-                ], depends=['user'], required=True)
+                ], required=True)
     conformity_state = fields.Selection([
            ('gnc', 'Nonconforming Pending'),
            ('nonconforming', 'Nonconforming'),
@@ -507,7 +507,7 @@ class InvoiceConformStart(ModelView):
     conformity = fields.Many2One('account.invoice.conformity', 'Conformity',
         domain=[('invoice', '=', Eval('context', {}).get('active_id', 0)),
                ('group.users', '=', Eval('user', 0))
-                ], depends=['user'], required=True)
+                ], required=True)
     conforming_description = fields.Text('Conforming Description')
     user = fields.Many2One('res.user', 'Active User', readonly=True)
 
