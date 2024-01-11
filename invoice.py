@@ -195,16 +195,14 @@ class Invoice(metaclass=PoolMeta):
             'required': Bool(Eval('type') == 'in') &
                 ~Eval('state').in_(['cancelled', 'draft']) &
                 Bool(Eval('conformity_required')),
-            },
-        depends=['type', 'conformity_required', 'state'])
+            })
     conformities_state = fields.Function(fields.Selection(
                 [(None, '')] + CONFORMITY_STATE,
             'Conformities State', states={
                 'invisible': Not(Equal(Eval('type'), 'in')) &
                 ~Bool(Eval('conformity_required')),
-            },
-            depends=['type', 'conformity_required'], sort=False),
-            'get_conformities_state', searcher='search_conformities_state')
+            } sort=False), 'get_conformities_state',
+            searcher='search_conformities_state')
     activities = fields.One2Many('activity.activity', 'resource',
         'Activities')
     conformities_summary = fields.Function(fields.Text('Summary'),
