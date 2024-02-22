@@ -2,8 +2,8 @@
 <!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
 this repository contains the full copyright notices and license terms. -->
 <data>
-    <xpath expr="/form/notebook/page[@id='invoice']/field[@name='lines']"
-            position="before">
+    <xpath expr="/form/notebook/page[@id='invoice']/field[@name='currency']"
+            position="after">
         <label name="conformities_state"/>
         <field name="conformities_state"/>
     </xpath>
