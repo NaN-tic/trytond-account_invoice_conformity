@@ -161,16 +161,14 @@
         </record>
         <!-- access -->
         <record model="ir.model.access" id="access_conform_group_res_user">
-            <field name="model"
-                search="[('model', '=', 'account.invoice.conform_group-res.user')]"/>
+            <field name="model">account.invoice.conform_group-res.user</field>
             <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_conform_group_res_user_account">
-            <field name="model"
-                   search="[('model', '=', 'account.invoice.conform_group-res.user')]"/>
+            <field name="model">account.invoice.conform_group-res.user</field>
             <field name="group" ref="account.group_account"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
@@ -178,8 +176,7 @@
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_conform_group_res_user_account_admin">
-            <field name="model"
-                search="[('model', '=', 'account.invoice.conform_group-res.user')]"/>
+            <field name="model">account.invoice.conform_group-res.user</field>
             <field name="group" ref="account.group_account_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -187,8 +184,7 @@
             <field name="perm_delete" eval="True"/>
         </record>
         <record model="ir.model.access" id="access_conform_group">
-            <field name="model"
-                search="[('model', '=', 'account.invoice.conform_group')]"/>
+            <field name="model">account.invoice.conform_group</field>
             <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
@@ -197,8 +193,7 @@
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_conform_group_account">
-            <field name="model"
-                   search="[('model', '=', 'account.invoice.conform_group')]"/>
+            <field name="model">account.invoice.conform_group</field>
             <field name="group" ref="account.group_account"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
@@ -206,8 +201,7 @@
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_conform_group_account_admin">
-            <field name="model"
-                search="[('model', '=', 'account.invoice.conform_group')]"/>
+            <field name="model">account.invoice.conform_group</field>
             <field name="group" ref="account.group_account_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -215,8 +209,7 @@
             <field name="perm_delete" eval="True"/>
         </record>
         <record model="ir.model.access" id="access_account_invoice_conform">
-            <field name="model"
-                search="[('model', '=', 'account.invoice')]"/>
+            <field name="model">account.invoice</field>
             <field name="group" ref="group_conform"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
@@ -224,18 +217,16 @@
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.field.access" id="conform_conformities_state_group_conform">
-            <field name="field"
-                search="[('model.model', '=', 'account.invoice'),
-                  ('name', '=', 'conformities_state')]"/>
+            <field name="model">account.invoice</field>
+            <field name="field">conformities_state</field>
             <field name="group" ref="group_conform"/>
-	        <field name="perm_read" eval="True"/>
-	        <field name="perm_write" eval="True"/>
-	        <field name="perm_create" eval="True"/>
-	        <field name="perm_delete" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
         <record model="ir.model.access" id="access_invoice_line_conform_group">
-            <field name="model"
-                  search="[('model', '=', 'account.invoice.line')]"/>
+            <field name="model">account.invoice.line</field>
             <field name="group" ref="group_conform"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
@@ -243,8 +234,7 @@
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_conformity_group_conform_group">
-            <field name="model"
-                   search="[('model', '=', 'account.invoice.conform_group')]"/>
+            <field name="model">account.invoice.conform_group</field>
             <field name="group" ref="group_conform"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
