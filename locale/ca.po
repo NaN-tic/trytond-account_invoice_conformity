@@ -274,10 +274,6 @@ msgctxt "model:activity.type,name:meeting_type"
 msgid "System"
 msgstr "Sistema"
 
-msgctxt "model:ir.action,name:"
-msgid "Credit Notes to Conform"
-msgstr "Factures d'abonament per conformar"
-
 msgctxt "model:ir.action,name:act_account_conform_invoices"
 msgid "Conform Invoices"
 msgstr "Conformar"
