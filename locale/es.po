@@ -334,10 +334,6 @@ msgstr ""
 "La factura \"%(invoice)s\" no se puede contabilizar porque le falta"
 " un grupo de conformidad"
 
-msgctxt "model:ir.ui.menu,name:"
-msgid "Credit Notes to Conform"
-msgstr "Facturas de abono para conformar"
-
 msgctxt "model:ir.ui.menu,name:menu_counform_group"
 msgid "Conform Groups"
 msgstr "Grupos de conformidad"
