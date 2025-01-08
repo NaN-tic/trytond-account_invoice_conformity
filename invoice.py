@@ -103,7 +103,7 @@ class Conformity(ModelSQL, ModelView):
 
         if new_activities:
             with Transaction().set_context(_check_access=False):
-                Activity.create(a._save_values for a in new_activities)
+                Activity.create(a._save_values() for a in new_activities)
 
         return super(Conformity, cls).create(vlist)
 
@@ -119,7 +119,7 @@ class Conformity(ModelSQL, ModelView):
                 new_activities += cls._get_activities(values, conformity)
 
         if new_activities:
-            Activity.create(a._save_values for a in new_activities)
+            Activity.create(a._save_values() for a in new_activities)
 
         return super(Conformity, cls).write(*args)
 
