@@ -163,8 +163,9 @@ class Test(unittest.TestCase):
         IrModel = Model.get('ir.model')
         ActivityReference = Model.get('activity.reference')
         invoice_reference = ActivityReference()
-        invoice_reference.model, = IrModel.find(
-            ['model', '=', 'account.invoice'])
+        invoice_reference.model, = IrModel.find([
+            ('name', '=', 'account.invoice'),
+            ])
         invoice_reference.save()
 
         # Create invoice
