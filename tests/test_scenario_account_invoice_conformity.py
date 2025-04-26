@@ -83,7 +83,7 @@ class Test(unittest.TestCase):
         account_user_admin.employees.append(employee2)
         account_user_admin.employee = employee2
         account_admin_group, = Group.find([('name', '=',
-                                            'Account Administration')])
+                                            'Accounting Administration')])
         account_user_admin.groups.append(account_admin_group)
         account_user_admin.save()
 
