@@ -72,7 +72,7 @@ class Test(unittest.TestCase):
         account_user.login = 'account'
         account_user.employees.append(employee1)
         account_user.employee = employee1
-        account_group, = Group.find([('name', '=', 'Account')])
+        account_group, = Group.find([('name', '=', 'Accounting')])
         account_user.groups.append(account_group)
         account_user.save()
 
