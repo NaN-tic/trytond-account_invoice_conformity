@@ -220,6 +220,7 @@ class Test(unittest.TestCase):
 
         # Create out invoice
         invoice = Invoice()
+        invoice.type = 'out'
         invoice.party = party
         invoice.payment_term = payment_term
         line = InvoiceLine()
