@@ -16,6 +16,7 @@ def register():
         invoice.ConformGroupInvoice,
         invoice.Conformity,
         invoice.Invoice,
+        invoice.Move,
         invoice.InvoiceConformStart,
         invoice.InvoiceNonconformStart,
         user.User,
