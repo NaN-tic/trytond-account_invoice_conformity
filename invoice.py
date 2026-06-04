@@ -14,7 +14,7 @@ from trytond.wizard import Wizard, StateView, StateTransition, Button
 from datetime import datetime
 import itertools
 
-__all__ = ['ConformGroupUser', 'ConformGroup', 'Invoice',
+__all__ = ['ConformGroupUser', 'ConformGroup', 'Invoice', 'Move',
     'ConformGroupInvoice', 'Conformity', 'InvoiceConform',
     'InvoiceConformStart']
 
@@ -446,6 +446,29 @@ class Invoice(metaclass=PoolMeta):
                 '</div>'
                 '<div align="left">{}</div>'.format(title, texts))
         return '<div align="left"><br></div>'.join(body)
+
+
+class Move(metaclass=PoolMeta):
+    __name__ = 'account.move'
+
+    invoice_conformities_state = fields.Function(fields.Selection(
+            [(None, '')] + CONFORMITY_STATE, 'Invoice Conformity State',
+            sort=False), 'get_invoice_conformities_state',
+        searcher='search_invoice_conformities_state')
+
+    @classmethod
+    def search_invoice_conformities_state(cls, name, clause):
+        return [('origin.conformities_state',) + tuple(clause[1:3])
+            + ('account.invoice',) + tuple(clause[3:])]
+
+    @classmethod
+    def get_invoice_conformities_state(cls, moves, name):
+        result = dict.fromkeys([m.id for m in moves], None)
+        for move in moves:
+            if (move.origin
+                    and move.origin.__name__ == 'account.invoice'):
+                result[move.id] = move.origin.conformities_state
+        return result
 
 
 class InvoiceNonconformStart(ModelView):

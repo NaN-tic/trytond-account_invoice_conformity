@@ -172,6 +172,7 @@ class Test(unittest.TestCase):
         set_user(account_user)
         Invoice = Model.get('account.invoice')
         InvoiceLine = Model.get('account.invoice.line')
+        Move = Model.get('account.move')
         invoice = Invoice()
         invoice.type = 'in'
         invoice.party = party
@@ -217,6 +218,11 @@ class Test(unittest.TestCase):
         Invoice.post([invoice.id], config.context)
         invoice.reload()
         self.assertEqual(invoice.state, 'posted')
+        self.assertEqual(invoice.move.invoice_conformities_state, 'conforming')
+        moves = Move.find([
+                ('invoice_conformities_state', '=', 'conforming'),
+                ])
+        self.assertIn(invoice.move, moves)
 
         # Create out invoice
         invoice = Invoice()
@@ -232,6 +238,7 @@ class Test(unittest.TestCase):
         Invoice.post([invoice.id], config.context)
         invoice.reload()
         self.assertEqual(invoice.state, 'posted')
+        self.assertEqual(invoice.move.invoice_conformities_state, None)
 
         # Disable configuration and check error doesn't raise
         config.user = 1
