@@ -466,7 +466,7 @@ class Move(metaclass=PoolMeta):
         result = dict.fromkeys([m.id for m in moves], None)
         for move in moves:
             if (move.origin
-                    and move.origin.__name__ == 'account.invoice'):
+                    and getattr(move.origin, '__name__', None) == 'account.invoice'):
                 result[move.id] = move.origin.conformities_state
         return result
 
