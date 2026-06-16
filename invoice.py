@@ -4,7 +4,6 @@ from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval, Bool, Not, Equal
 from trytond.config import config, parse_uri
-from trytond import backend
 from trytond.exceptions import UserError
 from sql.functions import Function
 from sql.conditionals import Case
@@ -223,7 +222,7 @@ class Invoice(metaclass=PoolMeta):
         Conformity = pool.get('account.invoice.conformity')
         conformity = Conformity.__table__()
         sql_table = cls.__table__()
-        table = backend.TableHandler(cls, module_name)
+        table = cls.__table_handler__(module_name)
         today = datetime.today()
 
         # Migration from 4.0: rename conformity_result into conformity_state
