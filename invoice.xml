@@ -58,7 +58,7 @@
             <field name="inherit" ref="account_invoice.invoice_view_form"/>
             <field name="name">invoice_form</field>
             <field name="domain"
-                eval="[(Eval('context', {}).get('type'), '=', 'in')]"
+                eval="Eval('context', {}).get('type') == 'in'"
                 pyson="1"/>
         </record>
         <record model="ir.ui.view" id="invoice_view_tree">
@@ -67,7 +67,7 @@
             <field name="inherit" ref="account_invoice.invoice_view_tree"/>
             <field name="name">invoice_tree</field>
             <field name="domain"
-                eval="[(Eval('context', {}).get('type'), '=', 'in')]"
+                eval="Eval('context', {}).get('type') == 'in'"
                 pyson="1"/>
         </record>
 
