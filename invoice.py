@@ -3,7 +3,8 @@
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval, Bool, Not, Equal
-from trytond.config import config, parse_uri
+import trytond.config as config
+from trytond.config import parse_uri
 from trytond.exceptions import UserError
 from sql.functions import Function
 from sql.conditionals import Case
