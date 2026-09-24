@@ -4,10 +4,6 @@
         <record model="res.group" id="group_conform">
             <field name="name">Conform</field>
         </record>
-        <record model="res.user-res.group" id="user_admin_group_conform">
-            <field name="user" ref="res.user_admin"/>
-            <field name="group" ref="group_conform"/>
-        </record>
 
         <!-- conform group -->
         <record model="ir.ui.view" id="conform_group_view_form">
