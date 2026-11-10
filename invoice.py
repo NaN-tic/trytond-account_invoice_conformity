@@ -463,10 +463,11 @@ class Move(metaclass=PoolMeta):
 
     @classmethod
     def get_invoice_conformities_state(cls, moves, name):
+        pool = Pool()
+        Invoice = pool.get('account.invoice')
         result = dict.fromkeys([m.id for m in moves], None)
         for move in moves:
-            if (move.origin
-                    and move.origin.__name__ == 'account.invoice'):
+            if isinstance(move.origin, Invoice):
                 result[move.id] = move.origin.conformities_state
         return result
 
